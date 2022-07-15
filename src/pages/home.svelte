@@ -1,92 +1,88 @@
 <script>
+  import { Page, Block, Row, Col } from "framework7-svelte";
   import {
-    Page,
-    Navbar,
-    NavLeft,
-    NavTitle,
-    NavTitleLarge,
-    NavRight,
-    Link,
-    Toolbar,
-    Block,
-    BlockTitle,
-    List,
-    ListItem,
-    Row,
-    Col,
-    Button,
-  } from "framework7-svelte";
+    accessChartData,
+    borrowChartData,
+    bookChartData,
+    paperChartData,
+  } from "../js/store";
+  import { getDataSet, lineOption, pieOption } from "../js/api/dataset";
+  import { onMount } from "svelte";
+
+  import Line from "svelte-chartjs/src/Line.svelte";
+  import Pie from "svelte-chartjs/src/Pie.svelte";
+  import MainHeader from "../components/mainComponent/mainHeader.svelte";
+  import LeftPanel from "../components/mainComponent/leftPanel.svelte";
+
+  onMount(() => {
+    if (localStorage.getItem("account-credential")) {
+      getDataSet();
+    }
+  });
 </script>
 
+<LeftPanel />
+
 <Page name="home">
-  <!-- Top Navbar -->
-  <Navbar large sliding={false}>
-    <NavLeft>
-      <Link
-        iconIos="f7:menu"
-        iconAurora="f7:menu"
-        iconMd="material:menu"
-        panelOpen="left"
-      />
-    </NavLeft>
-    <NavTitle sliding>Libsysfo Library</NavTitle>
-    <NavRight>
-      <Link
-        iconIos="f7:menu"
-        iconAurora="f7:menu"
-        iconMd="material:menu"
-        panelOpen="right"
-      />
-    </NavRight>
-    <NavTitleLarge>Libsysfo Library</NavTitleLarge>
-  </Navbar>
-
-  <!-- Page content -->
-  <Block strong>
-    <p>
-      This is an example of tabs-layout application. The main point of such
-      tabbed layout is that each tab contains independent view with its own
-      routing and navigation.
-    </p>
-
-    <p>
-      Each tab/view may have different layout, different navbar type (dynamic,
-      fixed or static) or without navbar like this tab.
-    </p>
-  </Block>
-
-  <BlockTitle>Navigation</BlockTitle>
-  <List>
-    <ListItem link="/about/" title="About" />
-    <ListItem link="/form/" title="Form" />
-  </List>
-
-  <BlockTitle>Modals</BlockTitle>
+  <MainHeader />
   <Block strong>
     <Row>
-      <Col width="50">
-        <Button fill raised popupOpen="#my-popup">Popup</Button>
+      <Col width={0} medium={15} />
+      <Col width={100} medium={35}>
+        <Line
+          data={$borrowChartData}
+          height={350}
+          options={lineOption("Peminjaman")}
+        />
       </Col>
-      <Col width="50">
-        <Button fill raised loginScreenOpen="#my-login-screen"
-          >Login Screen</Button
-        >
+      <Col width={100} medium={35}>
+        <Line
+          data={$accessChartData}
+          height={350}
+          options={lineOption("Akses")}
+        />
       </Col>
+      <Col width={0} medium={15} />
+    </Row>
+    <Row>
+      <Col width={0} medium={15} />
+      <Col width={100} medium={35}>
+        <Row>
+          <Col>
+            <Pie data={$bookChartData} {pieOption} />
+          </Col>
+          <Col>
+            <Pie data={$paperChartData} {pieOption} />
+          </Col>
+        </Row>
+      </Col>
+      <Col width={100} medium={35}>
+        <table class="make-center">
+          <thead>
+            <tr>
+              <th class="label-cell">Borrow Total</th>
+              <th class="numeric-cell">:</th>
+              <th class="numeric-cell">100</th>
+            </tr>
+            <tr>
+              <th class="label-cell">Access Total</th>
+              <th class="numeric-cell">:</th>
+              <th class="numeric-cell">100</th>
+            </tr>
+            <tr>
+              <th class="label-cell">Book Total</th>
+              <th class="numeric-cell">:</th>
+              <th class="numeric-cell">100</th>
+            </tr>
+            <tr>
+              <th class="label-cell">Paper Total</th>
+              <th class="numeric-cell">:</th>
+              <th class="numeric-cell">100</th>
+            </tr>
+          </thead>
+        </table>
+      </Col>
+      <Col width={0} medium={15} />
     </Row>
   </Block>
-
-  <List>
-    <ListItem
-      title="Dynamic (Component) Route"
-      link="/dynamic-route/blog/45/post/125/?foo=bar#about"
-    />
-    <ListItem
-      title="Default Route (404)"
-      link="/load-something-that-doesnt-exist/"
-    />
-    <ListItem
-      title="Request Data & Load"
-      link="/request-and-load/user/123456/"
-    />
-  </List>
 </Page>

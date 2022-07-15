@@ -12,3 +12,35 @@
 }
 
 /* Your app custom styles here */
+
+.make-capital {
+  text-transform: capitalize;
+}
+
+.make-center {
+  margin: auto;
+}
+
+body {
+  max-width: 2000px;
+  margin: 0 auto;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #977560;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}

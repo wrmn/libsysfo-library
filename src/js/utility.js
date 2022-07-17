@@ -8,8 +8,26 @@ export const switchTheme = () => {
   localStorage.setItem("theme", opposite);
 };
 
-
 export const isoToDmy = (dateStr, format) => {
   const date = new Date(dateStr);
   return dateFormat(date, format);
+};
+
+export const monthValues = {
+  values: "0 1 2 3 4 5 6 7 8 9 10 11".split(" "),
+  displayValues:
+    "January February March April May June July August September October November December".split(
+      " "
+    ),
+  textAlign: "center",
+};
+
+export const yearValues = {
+  values: (function () {
+    var arr = [];
+    for (var i = 1950; i <= 2030; i++) {
+      arr.push(i);
+    }
+    return arr;
+  })(),
 };

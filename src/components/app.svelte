@@ -16,6 +16,7 @@
   import cordovaApp from "../js/cordova-app";
 
   import LeftPanel from "./mainComponent/leftPanel.svelte";
+  import RightPanel from "./mainComponent/rightPanel.svelte";
   import LoginPage from "./mainComponent/login.svelte";
 
   import routes from "../js/routes";
@@ -91,6 +92,7 @@
 <App {...f7params}>
   <!-- Left panel with cover effect-->
   <LeftPanel />
+  <RightPanel />
   <LoginPage />
 
   <!-- Views/Tabs container -->
@@ -103,8 +105,8 @@
         iconF7="chart_bar_square"
         text="Dashboard"
       />
-      <Link tabLink="#view-paper" iconF7="doc_on_doc" text="Paper" />
       <Link tabLink="#view-book" iconF7="book" text="Book Collection" />
+      <Link tabLink="#view-paper" iconF7="doc_on_doc" text="Paper" />
       <Link
         tabLink="#view-library"
         iconF7="building_columns_fill"
@@ -113,8 +115,8 @@
     </Toolbar>
 
     <View id="view-dashboard" main tab tabActive url="/" />
-    <View id="view-paper" name="catalog" tab url="/catalog/" />
-    <View id="view-book" name="settings" tab url="/settings/" />
-    <View id="view-library" name="settings" tab url="/settings/" />
+    <View id="view-book" name="books" tab url="/book/" />
+    <View id="view-paper" name="papers" tab url="/paper/" />
+    <View id="view-library" name="library" tab url="/library/" />
   </Views>
 </App>

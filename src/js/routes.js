@@ -1,4 +1,7 @@
 import HomePage from "../pages/home.svelte";
+import BookPage from "../pages/books/index.svelte";
+import PaperPage from "../pages/papers/index.svelte";
+import LibraryPage from "../pages/library/index.svelte";
 
 import DynamicRoutePage from "../pages/dynamic-route.svelte";
 import RequestAndLoad from "../pages/request-and-load.svelte";
@@ -8,6 +11,18 @@ var routes = [
   {
     path: "/",
     component: HomePage,
+  },
+  {
+    path: "/book/",
+    component: BookPage,
+  },
+  {
+    path: "/paper/",
+    component: PaperPage,
+  },
+  {
+    path: "/library/",
+    component: LibraryPage,
   },
   {
     path: "/dynamic-route/blog/:blogId/post/:postId/",

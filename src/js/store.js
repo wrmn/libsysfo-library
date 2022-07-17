@@ -93,3 +93,10 @@ export const paperChartData = writable({
     },
   ],
 });
+
+export const otherData = writable({
+  borrow: 100,
+  access: 100,
+  book: 100,
+  paper: 100,
+});

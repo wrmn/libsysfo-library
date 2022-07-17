@@ -36,6 +36,7 @@
     "swiper": "^8.3.0"
   },
   "devDependencies": {
+    "@beyonk/svelte-mapbox": "^8.1.4",
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.49",
     "cpy-cli": "^4.1.0",
     "cross-env": "^7.0.3",

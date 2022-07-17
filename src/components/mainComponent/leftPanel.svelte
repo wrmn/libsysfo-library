@@ -5,13 +5,20 @@
     Navbar,
     NavRight,
     Button,
-    Block,
+    List,
+    ListItem,
+    Toggle,
     Page,
   } from "framework7-svelte";
 
   import { darkTheme, userData } from "../../js/store";
   import { switchTheme } from "../../js/utility";
   import { logout } from "../../js/api/profile";
+  import { onMount } from "svelte";
+  let stats;
+  onMount(() => {
+    stats = $darkTheme != true;
+  });
 </script>
 
 <Panel left cover>
@@ -36,25 +43,21 @@
           </Button>
         </NavRight>
       </Navbar>
-      <div style="width: 300px;">
-        <img src={$userData.libraryImage} alt="" width="100%" />
-      </div>
-      <table>
-        <tbody>
-          <tr>
-            <td class="label-cell">Perpustakaan</td>
-            <td class="label-cell make-capital">{$userData.libraryName}</td>
-          </tr>
-          <tr>
-            <td class="label-cell">Username</td>
-            <td class="label-cell">{$userData.username}</td>
-          </tr>
-          <tr>
-            <td class="label-cell">Email</td>
-            <td class="label-cell">{$userData.email}</td>
-          </tr>
-        </tbody>
-      </table>
+      <List simpleList>
+        <ListItem>
+          <span>Dark Mode</span>
+          <Toggle
+            checked={stats}
+            onToggleChange={() => {
+              switchTheme();
+              darkTheme.set(!$darkTheme);
+            }}
+          />
+        </ListItem>
+      </List>
+      <Button fill href="/profile/settings/" view=".view-main" panelClose>
+        Account Setting
+      </Button>
       <Button
         on:click={() => {
           logout();

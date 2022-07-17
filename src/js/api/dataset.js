@@ -5,9 +5,11 @@ import {
   bookChartData,
   borrowChartData,
   lineDataTemplate,
+  otherData,
   paperChartData,
 } from "../store";
 import { get } from "svelte/store";
+import { value } from "dom7";
 
 export const lineOption = (title) => {
   return {
@@ -16,11 +18,6 @@ export const lineOption = (title) => {
       title: {
         display: true,
         text: title,
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
       },
     },
     scale: {
@@ -35,13 +32,25 @@ export let pieOption = {
   responsive: true,
 };
 
-export const getDataSet = async () => {
-  const respBody = await getWithAuth("/admin/library/dashboard");
+export const getDataSet = async (datarange) => {
+  let path = "/admin/library/dashboard";
+  if (datarange != undefined) {
+    path = `${path}?from=${datarange.fromDate}&to=${datarange.toDate}`;
+  }
+  const respBody = await getWithAuth(path);
   if (respBody.status == 200) {
+    const paperType = respBody.data.dataset.paperType;
+    const bookStats = respBody.data.dataset.bookStatus;
     getBorrowDataset(respBody.data.dataset.borrow);
     getAccessDataset(respBody.data.dataset.access);
-    getBookDataset(respBody.data.dataset.bookStatus);
-    getPaperDataset(respBody.data.dataset.paperType);
+    getBookDataset(bookStats);
+    getPaperDataset(paperType);
+    otherData.set({
+      borrow: respBody.data.dataset.monthly.borrow,
+      access: respBody.data.dataset.monthly.access,
+      book: bookStats.new + bookStats.great + bookStats.good + bookStats.bad,
+      paper: paperType.journal + paperType.thesis + paperType.other,
+    });
   }
 };
 
@@ -60,21 +69,22 @@ const getBorrowDataset = (borrowData) => {
 
   datasetFinished.label = "Finished";
   datasetFinished.data = [];
-  datasetFinished.borderColor = "#C1CC10";
-  datasetFinished.backgroundColor = "#C1CC1055";
+  datasetFinished.borderColor = "#81CC10";
+  datasetFinished.backgroundColor = "#81CC1055";
 
   datasetCanceled.label = "Canceled";
   datasetCanceled.data = [];
-  datasetCanceled.borderColor = "#F00699";
+  datasetCanceled.borderColor = "#F00999";
   datasetCanceled.backgroundColor = "#F0069955";
 
-  borrowData.forEach((e) => {
-    data.labels.push(isoToDmy(e.month, "mmm 'yy"));
-    datasetTotal.data.push(e.count);
-    datasetFinished.data.push(e.finished);
-    datasetCanceled.data.push(e.canceled);
-  });
-
+  if (borrowData) {
+    borrowData.forEach((e) => {
+      data.labels.push(isoToDmy(e.month, "mmm 'yy"));
+      datasetTotal.data.push(e.count);
+      datasetFinished.data.push(e.finished);
+      datasetCanceled.data.push(e.canceled);
+    });
+  }
   data.datasets = [datasetTotal, datasetFinished, datasetCanceled];
   borrowChartData.set(data);
 };
@@ -89,10 +99,13 @@ const getAccessDataset = (accessData) => {
   datasetTotal.data = [];
   datasetTotal.borderColor = "#9395D3";
   datasetTotal.backgroundColor = "#9395D355";
-  accessData.forEach((e) => {
-    data.labels.push(isoToDmy(e.month, "mmm 'yy"));
-    datasetTotal.data.push(e.count);
-  });
+
+  if (accessData) {
+    accessData.forEach((e) => {
+      data.labels.push(isoToDmy(e.month, "mmm 'yy"));
+      datasetTotal.data.push(e.count);
+    });
+  }
 
   data.datasets = [datasetTotal];
   accessChartData.set(data);

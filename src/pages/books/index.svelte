@@ -9,7 +9,7 @@
   <Block strong>
     <Row class="align-items-center">
       <Col width={50} height={50}>
-        <Square menuName="Library Book Collection">
+        <Square menuName="Library Book Collection" href="/book/list/">
           <span slot="content">
             <Icon f7="square_stack_3d_down_right_fill" size="60px" />
           </span>

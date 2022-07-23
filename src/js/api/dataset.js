@@ -9,7 +9,6 @@ import {
   paperChartData,
 } from "../store";
 import { get } from "svelte/store";
-import { value } from "dom7";
 
 export const lineOption = (title) => {
   return {

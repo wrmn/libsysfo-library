@@ -1,4 +1,5 @@
 const serverUrl = import.meta.env.VITE_SERVER_ADDRESS;
+import { f7 } from "framework7-svelte";
 
 export const postWithoutAuth = async (data, path) => {
   const request = new Request(`${serverUrl}${path}`, {
@@ -12,12 +13,17 @@ export const postWithoutAuth = async (data, path) => {
   return response.json();
 };
 
-export const postWithAuth = async (data, path) => {
+export const postWithAuth = async (data, path, password) => {
   const myHeaders = new Headers();
   myHeaders.append(
     "Authorization",
     `Bearer ${localStorage.getItem("account-credential")}`
   );
+
+  if (password != undefined) {
+    myHeaders.append("Account-auth", password);
+  }
+
   const request = new Request(`${serverUrl}${path}`, {
     method: "POST",
     body: JSON.stringify(data),
@@ -50,4 +56,6 @@ export const getWithAuth = async (path) => {
 
 const handleError = (err) => {
   console.warn(err);
+  f7.dialog.close();
+  f7.dialog.alert("server timeout", "");
 };

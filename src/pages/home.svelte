@@ -7,6 +7,7 @@
     paperChartData,
     otherData,
   } from "../js/store";
+  import { dashboardTable } from "../js/storeTable";
   import { getDataSet, lineOption, pieOption } from "../js/api/dataset";
   import { onMount } from "svelte";
   import { monthValues, yearValues } from "../js/utility";
@@ -134,26 +135,13 @@
       <Col width={100} medium={35}>
         <table class="make-center">
           <thead>
-            <tr>
-              <th class="label-cell">Borrow Last 30 days</th>
-              <th class="numeric-cell">:</th>
-              <th class="numeric-cell">{$otherData.borrow}</th>
-            </tr>
-            <tr>
-              <th class="label-cell">Access Last 30 Days</th>
-              <th class="numeric-cell">:</th>
-              <th class="numeric-cell">{$otherData.access}</th>
-            </tr>
-            <tr>
-              <th class="label-cell">Book Total</th>
-              <th class="numeric-cell">:</th>
-              <th class="numeric-cell">{$otherData.book}</th>
-            </tr>
-            <tr>
-              <th class="label-cell">Paper Total</th>
-              <th class="numeric-cell">:</th>
-              <th class="numeric-cell">{$otherData.paper}</th>
-            </tr>
+            {#each $dashboardTable as d}
+              <tr>
+                <th class="label-cell">{d.Title}</th>
+                <th class="numeric-cell">:</th>
+                <th class="numeric-cell">{$otherData[d.data]}</th>
+              </tr>
+            {/each}
           </thead>
         </table>
       </Col>

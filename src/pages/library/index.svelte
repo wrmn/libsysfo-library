@@ -9,6 +9,7 @@
 
   const mapboxToken = import.meta.env.VITE_MAPBOX_KEY;
   let mapComponent;
+  let markerComponent;
   let zoom = 11.5;
   let center = { lat: -0.9345808, lng: 100.37 };
 </script>
@@ -59,6 +60,7 @@
         center: $userData.coordinate,
         zoom: 13,
       });
+      markerComponent.refreshMarker();
     }}
   >
     <BlockTitle>Location</BlockTitle>
@@ -70,15 +72,16 @@
         </Col>
       </Row>
       <div class="map-wrap">
-        <Map
+        <!-- NOTE: enable this code to show map -->
+        <!-- <Map
           bind:this={mapComponent}
           accessToken={mapboxToken}
           style="mapbox://styles/warmoa/cl3wwp1qa000414mqrf1cx8b4"
           {center}
           bind:zoom
         >
-          <Marker marker={$userData.coordinate} />
-        </Map>
+          <Marker marker={$userData.coordinate} bind:this={markerComponent} />
+        </Map> -->
       </div>
     </Block>
   </div>

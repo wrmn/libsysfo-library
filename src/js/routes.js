@@ -1,7 +1,15 @@
 import HomePage from "../pages/home.svelte";
+
 import BookPage from "../pages/books/index.svelte";
+import BookListPage from "../pages/books/list.svelte";
+import BookDetailPage from "../pages/books/detail.svelte";
+import BookAddPage from "../pages/books/add.svelte";
+
 import PaperPage from "../pages/papers/index.svelte";
+
 import LibraryPage from "../pages/library/index.svelte";
+
+import SettingPage from "../pages/settings/settings.svelte";
 
 import DynamicRoutePage from "../pages/dynamic-route.svelte";
 import RequestAndLoad from "../pages/request-and-load.svelte";
@@ -15,6 +23,20 @@ var routes = [
   {
     path: "/book/",
     component: BookPage,
+    routes: [
+      {
+        path: "list/",
+        component: BookListPage,
+      },
+      {
+        path: "detail/:id/",
+        component: BookDetailPage,
+      },
+      {
+        path: "add/",
+        component: BookAddPage,
+      },
+    ],
   },
   {
     path: "/paper/",
@@ -23,6 +45,10 @@ var routes = [
   {
     path: "/library/",
     component: LibraryPage,
+  },
+  {
+    path: "/settings/",
+    component: SettingPage,
   },
   {
     path: "/dynamic-route/blog/:blogId/post/:postId/",

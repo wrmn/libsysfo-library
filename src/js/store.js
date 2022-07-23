@@ -43,6 +43,14 @@ export const notLogin = writable(false);
 
 export const userData = writable({});
 
+export const collectionData = writable({});
+
+export const booksList = writable([]);
+
+export const booksSearchList = writable([]);
+
+export const bookResult = writable({});
+
 export const dashboardDataset = writable({});
 
 export const lineDataTemplate = {
@@ -67,7 +75,7 @@ export const lineDataTemplate = {
   data: [1, 2, 3, 4, 5, 6, 7],
 };
 
-export const lineTemplate = {
+const lineTemplate = {
   labels: [],
   datasets: [],
 };
@@ -100,3 +108,4 @@ export const otherData = writable({
   book: 100,
   paper: 100,
 });
+

@@ -5,13 +5,10 @@
     Navbar,
     NavRight,
     Button,
-    List,
-    ListItem,
-    Toggle,
     Page,
   } from "framework7-svelte";
 
-  import { darkTheme, userData } from "../../js/store";
+  import { darkTheme } from "../../js/store";
   import { switchTheme } from "../../js/utility";
   import { logout } from "../../js/api/profile";
   import { onMount } from "svelte";
@@ -43,21 +40,7 @@
           </Button>
         </NavRight>
       </Navbar>
-      <List simpleList>
-        <ListItem>
-          <span>Dark Mode</span>
-          <Toggle
-            checked={stats}
-            onToggleChange={() => {
-              switchTheme();
-              darkTheme.set(!$darkTheme);
-            }}
-          />
-        </ListItem>
-      </List>
-      <Button fill href="/profile/settings/" view=".view-main" panelClose>
-        Account Setting
-      </Button>
+      <Button fill href="/settings/">Account Setting</Button>
       <Button
         on:click={() => {
           logout();

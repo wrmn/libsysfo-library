@@ -59,7 +59,9 @@
   <List mediaList class="search-list searchbar-found">
     {#each $booksList as book}
       <ListItem
-        title={book.title.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())))}
+        title={book.title.replace(/\w\S*/g, (w) =>
+          w.replace(/^\w/, (c) => c.toUpperCase())
+        )}
         link={`/book/detail/${book.id}/`}
         popupClose
         subtitle={book.category}

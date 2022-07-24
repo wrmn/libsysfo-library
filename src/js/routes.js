@@ -5,6 +5,8 @@ import BookListPage from "../pages/books/list.svelte";
 import BookDetailPage from "../pages/books/detail.svelte";
 import BookAddPage from "../pages/books/add.svelte";
 
+import BorrowPage from "../pages/books/borrow/index.svelte";
+
 import PaperPage from "../pages/papers/index.svelte";
 
 import LibraryPage from "../pages/library/index.svelte";
@@ -35,6 +37,10 @@ var routes = [
       {
         path: "add/",
         component: BookAddPage,
+      },
+      {
+        path: "borrow/",
+        component: BorrowPage,
       },
     ],
   },

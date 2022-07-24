@@ -92,7 +92,7 @@
     height: 50vh;
     max-height: 500px;
     width: 100%;
-    object-fit: cover;
+    object-fit: scale-down;
     object-position: center;
   }
   .map-wrap {

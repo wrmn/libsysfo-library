@@ -34,6 +34,21 @@ export const bookAvailability = {
   },
 };
 
+export const borrowStatus = {
+  requested: {
+    color: "yellow",
+  },
+  taked: {
+    color: "blue",
+  },
+  finished: {
+    color: "green",
+  },
+  canceled: {
+    color: "red",
+  },
+};
+
 export const dashboardTable = readable([
   {
     Title: "Borrow Last 30 Days",
@@ -93,6 +108,46 @@ export const collectionDetailTable = readable([
     stats: bookAvailability,
   },
 ]);
+
+export const borrowDetailTable = [
+  {
+    title: "Status",
+    data: "status",
+  },
+  {
+    title: "Requested At",
+    data: "createdAt",
+    time: true,
+  },
+  {
+    title: "Taked At",
+    data: "takedAt",
+    time: true,
+  },
+  {
+    title: "Returned At",
+    data: "returnedAt",
+    time: true,
+  },
+  {
+    title: "Book Title",
+    data: "title",
+  },
+  {
+    title: "Book Serial Number",
+    data: "serialNumber",
+    linkTo: "/book/detail/",
+    linkVar: "collectionId",
+    linkTitle: "view book"
+  },
+  {
+    title: "User",
+    data: "userName",
+    linkTo: "/user/detail/",
+    linkVar: "userId",
+    linkTitle: "view User"
+  },
+];
 
 export const categories = [
   "Adult Fiction",

@@ -51,6 +51,8 @@ export const booksSearchList = writable([]);
 
 export const bookResult = writable({});
 
+export const borrowsResult = writable([]);
+
 export const dashboardDataset = writable({});
 
 export const lineDataTemplate = {
@@ -108,4 +110,3 @@ export const otherData = writable({
   book: 100,
   paper: 100,
 });
-

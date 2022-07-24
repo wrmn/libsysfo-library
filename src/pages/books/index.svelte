@@ -16,7 +16,7 @@
         </Square>
       </Col>
       <Col width={50}>
-        <Square menuName="Borrow History">
+        <Square menuName="Borrow History" href="/book/borrow/">
           <span slot="content">
             <Icon material="auto_stories" size="60px" />
           </span>

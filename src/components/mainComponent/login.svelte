@@ -16,7 +16,7 @@
 
   let indicator, password;
 
-  const alertLoginData = async () => {
+  const postLogin = async () => {
     const msg = await postWithoutAuth(
       { indicator, password },
       `/admin/library/login`
@@ -55,12 +55,8 @@
         />
       </List>
       <List>
-        <ListButton title="Sign In" onClick={() => alertLoginData()} />
+        <ListButton title="Sign In" onClick={() => postLogin()} />
       </List>
-      <BlockFooter>
-        Some text about login information.<br />Click "Sign In" to close Login
-        Screen
-      </BlockFooter>
     </Page>
   </View>
 </LoginScreen>

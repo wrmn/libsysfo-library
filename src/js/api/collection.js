@@ -1,8 +1,11 @@
-import { getWithAuth, getWithoutAuth, postWithAuth } from "../api";
+import {
+  getWithAuth,
+  getWithoutAuth,
+  postWithAuth,
+  whenUnsuccess,
+} from "../api";
 import { f7 } from "framework7-svelte";
 const path = "/admin/library/collection";
-
-const whenUnsuccess = (desc) => (desc ? desc : "server timeout");
 
 export const searchBooks = async (keyword) => {
   let response = await getWithoutAuth(`/book?source=local&keyword=${keyword}`);
@@ -24,8 +27,10 @@ export const getBook = async (slug) => {
   f7.dialog.alert(whenUnsuccess(response.description), "");
 };
 
-export const getCollections = async () => {
-  const response = await getWithAuth(path);
+export const getCollections = async (sn) => {
+  const link = sn ? `${path}?sn=${sn}` : `${path}`;
+
+  const response = await getWithAuth(link);
   if (response.status == 200) {
     return response.data.book;
   }

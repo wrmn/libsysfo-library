@@ -86,15 +86,7 @@
     {/if}
   </List>
   <div class:hide={isHide} class="list-container">
-    <List class="searchbar-not-found">
-      <ListItem title="Add New" link="#">
-        <Icon f7="plus" slot="media" />
-      </ListItem>
-      <ListItem title="Search In Gramedia" link="#">
-        <Icon f7="search_circle_fill" slot="media" />
-      </ListItem>
-    </List>
-    <List class="search-list searchbar-found" mediaList>
+    <List mediaList>
       {#if searching}
         <ListItem>
           <Preloader color="multi" />

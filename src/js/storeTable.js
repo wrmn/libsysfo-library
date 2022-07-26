@@ -38,6 +38,9 @@ export const borrowStatus = {
   requested: {
     color: "yellow",
   },
+  accepted: {
+    color: "teal",
+  },
   taked: {
     color: "blue",
   },
@@ -65,6 +68,55 @@ export const dashboardTable = readable([
   {
     Title: "Paper Total",
     data: "paper",
+  },
+]);
+
+export const userDetailTable = readable([
+  {
+    Title: "Username",
+    data: "username",
+  },
+  {
+    Title: "E-mail",
+    data: "email",
+    conditionalData: {
+      data: "verivied",
+      text: "verified",
+    },
+  },
+  {
+    Title: "Name",
+    data: "name",
+  },
+  {
+    Title: "Gender",
+    data: "gender",
+    dataSelect: {
+      F: "Female",
+      M: "Male",
+    },
+  },
+  {
+    Title: "Birthplace / Birthday",
+    dataSet: ["placeOfBirth", "dateOfBirth"],
+    separator: " / ",
+  },
+  {
+    Title: "Address",
+    data: "address",
+  },
+  {
+    Title: "Profession / Institution",
+    dataSet: ["profession", "institution"],
+    separator: " / ",
+  },
+  {
+    Title: "Phone Number",
+    dataSet: ["phoneCode", "phoneNo"],
+    conditionalData: {
+      data: "isWhatsapp",
+      text: "Whatsapp Number",
+    },
   },
 ]);
 
@@ -98,6 +150,10 @@ export const bookDetailTable = readable([
 
 export const collectionDetailTable = readable([
   {
+    Title: "Serial Number",
+    data: "sn",
+  },
+  {
     Title: "Status",
     data: "status",
     stats: bookStatus,
@@ -120,6 +176,11 @@ export const borrowDetailTable = [
     time: true,
   },
   {
+    title: "Accepted At",
+    data: "acceptedAt",
+    time: true,
+  },
+  {
     title: "Taked At",
     data: "takedAt",
     time: true,
@@ -127,6 +188,11 @@ export const borrowDetailTable = [
   {
     title: "Returned At",
     data: "returnedAt",
+    time: true,
+  },
+  {
+    title: "Canceled At",
+    data: "canceledAt",
     time: true,
   },
   {
@@ -138,14 +204,14 @@ export const borrowDetailTable = [
     data: "serialNumber",
     linkTo: "/book/detail/",
     linkVar: "collectionId",
-    linkTitle: "view book"
+    linkTitle: "view book",
   },
   {
     title: "User",
     data: "userName",
     linkTo: "/user/detail/",
     linkVar: "userId",
-    linkTitle: "view User"
+    linkTitle: "view User",
   },
 ];
 

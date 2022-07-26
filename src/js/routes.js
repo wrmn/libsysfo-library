@@ -6,6 +6,8 @@ import BookDetailPage from "../pages/books/detail.svelte";
 import BookAddPage from "../pages/books/add.svelte";
 
 import BorrowPage from "../pages/books/borrow/index.svelte";
+import BorrowActionPage from "../pages/books/borrow/action.svelte";
+import BorrowUserPage from "../pages/books/borrow/user.svelte";
 
 import PaperPage from "../pages/papers/index.svelte";
 
@@ -41,6 +43,16 @@ var routes = [
       {
         path: "borrow/",
         component: BorrowPage,
+        routes: [
+          {
+            path: "action/",
+            component: BorrowActionPage,
+          },
+          {
+            path: "user/",
+            component: BorrowUserPage,
+          },
+        ],
       },
     ],
   },

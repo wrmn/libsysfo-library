@@ -1,6 +1,6 @@
 <script>
   import { Row, Col, Block, Page, Icon } from "framework7-svelte";
-  import Square from "../../components/menuComponent/square.svelte";
+  import Square from "../../components/otherComponent/square.svelte";
   import MainHeader from "../../components/mainComponent/mainHeader.svelte";
 </script>
 

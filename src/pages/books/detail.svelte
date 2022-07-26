@@ -9,6 +9,7 @@
     Row,
     Col,
     List,
+    ListInput,
     ListItem,
     Preloader,
     Button,
@@ -29,6 +30,7 @@
 
   let edit = false;
   const collection = {
+    sn: "",
     status: 1,
     availability: 1,
   };
@@ -42,6 +44,7 @@
     id = f7route.params["id"];
     collectionData.set(await getCollection(id));
     f7.dialog.close();
+    collection.sn = $collectionData.collection.sn;
     collection.status = $collectionData.collection.status;
     collection.availability = $collectionData.collection.availability;
   });
@@ -61,6 +64,12 @@
         <Row>
           <Col width={70}>
             <List>
+              <ListInput
+                label="Serial Number"
+                type="text"
+                placeholder="Serial number"
+                bind:value={collection.sn}
+              />
               <ListItem
                 title="Status"
                 smartSelect
@@ -109,9 +118,8 @@
           <Col width={30}>
             <Button
               fill
-              iconF7="arrow_down_square"
               on:click={() => {
-                f7.dialog.alert("save changes?", "", async () => {
+                f7.dialog.confirm("save changes?", "", async () => {
                   const resp = await updateCollection(id, collection);
                   if (resp.status == 200) {
                     booksList.set(await getCollections());
@@ -121,25 +129,34 @@
                 });
               }}>Save</Button
             >
+            <Button
+              on:click={() => {
+                edit = false;
+              }}>cancel</Button
+            >
           </Col>
         </Row>
       {:else}
         <Row>
-          <Col width={60}>
+          <Col width={70}>
             <table>
               <thead>
                 {#each $collectionDetailTable as d}
                   <tr>
-                    <td width={50} class="label-cell">{d.Title}</td>
+                    <td class="label-cell">{d.Title}</td>
                     <td width={20} class="numeric-cell">:</td>
                     <td class="numeric-cell">
                       {#if $collectionData.collection[d.data]}
-                        <Badge
-                          color={d.stats[$collectionData.collection[d.data]]
-                            .color}
-                          tooltip={d.data}
-                        />
-                        {d.stats[$collectionData.collection[d.data]].text}
+                        {#if d.stats}
+                          <Badge
+                            color={d.stats[$collectionData.collection[d.data]]
+                              .color}
+                            tooltip={d.data}
+                          />
+                          {d.stats[$collectionData.collection[d.data]].text}
+                        {:else}
+                          {$collectionData.collection[d.data]}
+                        {/if}
                       {/if}
                     </td>
                   </tr>
@@ -147,10 +164,9 @@
               </thead>
             </table>
           </Col>
-          <Col width={40}>
+          <Col width={30}>
             <Button
               fill
-              iconF7="square_pencil"
               on:click={() => {
                 edit = true;
               }}>Edit Status</Button

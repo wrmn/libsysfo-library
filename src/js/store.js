@@ -45,11 +45,19 @@ export const userData = writable({});
 
 export const collectionData = writable({});
 
+export const collectionSearchList = writable([]);
+
 export const booksList = writable([]);
 
 export const booksSearchList = writable([]);
 
 export const bookResult = writable({});
+
+export const userSearchList = writable([]);
+
+export const userResult = writable({});
+
+export const userDetail = writable({});
 
 export const borrowsResult = writable([]);
 

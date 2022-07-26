@@ -4,7 +4,7 @@
   import { Map } from "@beyonk/svelte-mapbox";
 
   import MainHeader from "../../components/mainComponent/mainHeader.svelte";
-  import Gallery from "../../components/menuComponent/gallery.svelte";
+  import Gallery from "../../components/otherComponent/gallery.svelte";
   import Marker from "./map/_Marker.svelte";
 
   const mapboxToken = import.meta.env.VITE_MAPBOX_KEY;

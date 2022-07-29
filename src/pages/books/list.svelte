@@ -47,7 +47,7 @@
 
     <Searchbar
       searchContainer=".search-list"
-      searchIn=".item-title, .item-subtitle, .item-text, .item-stats"
+      searchIn=".item-title, .item-subtitle, .item-text, .item-stats, .item-header"
       class="searchbar-demo"
       disableButton={!theme.aurora}
       expandable
@@ -59,6 +59,7 @@
   <List mediaList class="search-list searchbar-found">
     {#each $booksList as book}
       <ListItem
+        header={book.status.sn}
         title={book.title.replace(/\w\S*/g, (w) =>
           w.replace(/^\w/, (c) => c.toUpperCase())
         )}

@@ -43,3 +43,6 @@ cordova/www/
 
 # Production build
 www/
+
+
+*.txt

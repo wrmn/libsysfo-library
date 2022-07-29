@@ -7,8 +7,6 @@
     List,
     ListItem,
     AccordionContent,
-    Searchbar,
-    theme,
     f7,
     Button,
   } from "framework7-svelte";
@@ -16,7 +14,9 @@
   import { borrowsResult, userDetail } from "../../js/store";
   import { borrowStatus, borrowDetailTable } from "../../js/storeTable";
   import { getUser } from "../../js/api/user";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
+  import { borrowAction } from "../../js/api/borrow";
+
   import UserPopup from "./userPopup.svelte";
 
   let calendarRange, status, sortCategory;
@@ -26,10 +26,15 @@
   let desc = true;
   let popupOpened = false;
   let field = "title";
+
   export let callApi;
   export let viewUser = true;
+  export let viewBook = true;
+  export let viewFilter = true;
+  export let f7router;
 
   onMount(async () => {
+    borrowsResult.set([]);
     f7.dialog.preloader();
     borrowsResult.set(await callApi);
     f7.dialog.close();
@@ -47,11 +52,9 @@
     });
   });
 
-  export const refresh = async (renew) => {
-    f7.dialog.preloader();
-    borrowsResult.set(await renew);
-    f7.dialog.close();
-  };
+  onDestroy(() => {
+    borrowsResult.set([]);
+  });
 
   const resultFilter = () => {
     showResult = $borrowsResult.filter(
@@ -83,131 +86,145 @@
       return 0;
     });
   };
+
+  const sendAction = async (body) => {
+    const response = await borrowAction(body);
+
+    f7.dialog.alert(response.description, "", () => {
+      if (response.status == 200) {
+        f7router.back();
+      }
+    });
+  };
 </script>
 
 <UserPopup bind:popupOpened />
 
-<Card>
-  <CardContent>
-    <List>
-      <Row>
-        <Col width={5} />
-        <Col width={90}>
-          <Searchbar
-            searchContainer=".search-list"
-            searchIn=".item-title"
-            disableButton={!theme.aurora}
-          />
-        </Col>
-        <Col width={5} />
-
-        <Col width={100} medium={33}>
-          <Row>
-            <Col width={20}>
-              <Button
-                iconF7="arrow_up_arrow_down"
-                on:click={() => {
-                  desc = !desc;
-                  resultSort();
-                }}
-              />
-            </Col>
-            <Col width={80}>
-              <ListItem
-                title="Sort by"
-                bind:this={sortCategory}
-                smartSelect
-                smartSelectParams={{
-                  openIn: "popover",
-                  on: {
-                    close: () => {
-                      field = sortCategory.smartSelectInstance().getValue();
-                      resultSort();
-                    },
-                  },
-                }}
-              >
-                <select
-                  name="sort-by"
-                  value=""
-                  on:change={() => {
-                    sortCategory.smartSelectInstance().close();
-                  }}
-                >
-                  <option value="title">Book Title</option>
-                  <option value="userName">User</option>
-                  <option value="createdAt">Request Date</option>
-                  <option value="takedAt">Taked Date</option>
-                  <option value="returnedAt">Return Date</option>
-                </select>
-              </ListItem>
-            </Col>
-          </Row>
-        </Col>
-
-        <Col width={100} medium={33}>
-          <ListItem
-            title="Status"
-            smartSelect
-            bind:this={status}
-            smartSelectParams={{
-              openIn: "popover",
-              on: {
-                close: () => {
-                  statusFilter = status.smartSelectInstance().getValue();
-                  resultFilter();
-                },
-              },
-            }}
-          >
-            <select name="status" multiple value={Object.keys(borrowStatus)}>
-              {#each Object.keys(borrowStatus) as k}
-                <option value={k}>
-                  {k.replace(/\w\S*/g, (w) =>
-                    w.replace(/^\w/, (c) => c.toUpperCase())
-                  )}
-                </option>
-              {/each}
-            </select>
-          </ListItem>
-        </Col>
-        <Col width={100} medium={33}>
-          <div class="list no-hairlines-md inline-labels">
-            <div class="item-content item-input">
-              <div class="item-inner">
-                <div class="item-title item-label">Date</div>
-                <div class="item-input-wrap">
-                  <input
-                    type="text"
-                    placeholder="Select date range"
-                    readonly="readonly"
-                    id="demo-calendar-range"
-                  />
-                  <span
-                    class="input-clear-button"
+{#if viewFilter}
+  <Card>
+    <CardContent>
+      <List>
+        <Row>
+          <Col width={100} medium={33}>
+            <Row>
+              <Col width={10}>
+                {#if desc}
+                  <Button
+                    iconF7="sort_down"
+                    tooltip="sort"
+                    iconSize={30}
+                    class="padding"
                     on:click={() => {
-                      timeFilter = [new Date("05/08/2017"), new Date()];
-                      resultFilter();
+                      desc = !desc;
+                      resultSort();
                     }}
                   />
+                {:else}
+                  <Button
+                    iconF7="sort_up"
+                    tooltip="sort"
+                    iconSize={30}
+                    class="padding"
+                    on:click={() => {
+                      desc = !desc;
+                      resultSort();
+                    }}
+                  />
+                {/if}
+              </Col>
+              <Col width={90}>
+                <ListItem
+                  title="Sort by"
+                  bind:this={sortCategory}
+                  smartSelect
+                  smartSelectParams={{
+                    openIn: "popover",
+                    on: {
+                      close: () => {
+                        field = sortCategory.smartSelectInstance().getValue();
+                        resultSort();
+                      },
+                    },
+                  }}
+                >
+                  <select
+                    name="sort-by"
+                    value=""
+                    on:change={() => {
+                      sortCategory.smartSelectInstance().close();
+                    }}
+                  >
+                    <option value="title">Book Title</option>
+                    <option value="userName">User</option>
+                    <option value="createdAt">Request Date</option>
+                  </select>
+                </ListItem>
+              </Col>
+            </Row>
+          </Col>
+
+          <Col width={100} medium={33}>
+            <ListItem
+              title="Status"
+              smartSelect
+              bind:this={status}
+              smartSelectParams={{
+                openIn: "popover",
+                on: {
+                  close: () => {
+                    statusFilter = status.smartSelectInstance().getValue();
+                    resultFilter();
+                  },
+                },
+              }}
+            >
+              <select name="status" multiple value={Object.keys(borrowStatus)}>
+                {#each Object.keys(borrowStatus) as k}
+                  <option value={k}>
+                    {k.replace(/\w\S*/g, (w) =>
+                      w.replace(/^\w/, (c) => c.toUpperCase())
+                    )}
+                  </option>
+                {/each}
+              </select>
+            </ListItem>
+          </Col>
+          <Col width={100} medium={33}>
+            <div class="list no-hairlines-md inline-labels">
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Date</div>
+                  <div class="item-input-wrap">
+                    <input
+                      type="text"
+                      placeholder="Select date range"
+                      readonly="readonly"
+                      id="demo-calendar-range"
+                    />
+                    <span
+                      class="input-clear-button"
+                      on:click={() => {
+                        timeFilter = [new Date("05/08/2017"), new Date()];
+                        resultFilter();
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </Col>
-      </Row>
-    </List>
-  </CardContent>
-</Card>
+          </Col>
+        </Row>
+      </List>
+    </CardContent>
+  </Card>
+{/if}
+
 <Card>
   <CardContent>
     <div class="data-table make-capital">
       {#if $borrowsResult.length == 0}
         There is no borrow data yet.
       {:else}
-        <List class="searchbar-not-found">
-          <ListItem title="Nothing found" />
-        </List>
         <List
           accordionList
           accordionOpposite
@@ -243,13 +260,18 @@
                   </table>
                   <div class="data-action">
                     <Row>
-                      <Col width={50}>
-                        <Button outline href={`/book/detail/${p.collectionId}`}>
-                          View Book
-                        </Button>
-                      </Col>
+                      {#if viewBook}
+                        <Col>
+                          <Button
+                            outline
+                            href={`/book/detail/${p.collectionId}/`}
+                          >
+                            View Book
+                          </Button>
+                        </Col>
+                      {/if}
                       {#if viewUser}
-                        <Col width={50}>
+                        <Col>
                           <Button
                             outline
                             on:click={async () => {
@@ -265,6 +287,57 @@
                         </Col>
                       {/if}
                     </Row>
+                    {#if !(p.returnedAt || p.canceledAt)}
+                      <Row class="padding-top">
+                        {#if !p.takedAt}
+                          <Col>
+                            <Button
+                              outline
+                              color="red"
+                              on:click={async () => {
+                                f7.dialog.confirm(
+                                  "Reject this borrow?",
+                                  "",
+                                  () => {
+                                    sendAction({
+                                      state: "cancel",
+                                      borrowId: p.id,
+                                    });
+                                  }
+                                );
+                              }}
+                            >
+                              Reject
+                            </Button>
+                          </Col>
+                        {/if}
+                        <Col>
+                          <Button
+                            fill
+                            color="green"
+                            textColor="black"
+                            on:click={async () => {
+                              f7.dialog.confirm(
+                                "Update borrow status?",
+                                "",
+                                () => {
+                                  sendAction({
+                                    state: "next",
+                                    borrowId: p.id,
+                                  });
+                                }
+                              );
+                            }}
+                          >
+                            {p.acceptedAt
+                              ? p.takedAt
+                                ? "Return"
+                                : "Take"
+                              : "Accept"}
+                          </Button>
+                        </Col>
+                      </Row>
+                    {/if}
                   </div>
                 </div>
               </AccordionContent>

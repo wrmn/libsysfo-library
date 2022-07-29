@@ -98,7 +98,7 @@ export const userDetailTable = readable([
   },
   {
     Title: "Birthplace / Birthday",
-    dataSet: ["placeOfBirth", "dateOfBirth"],
+    dataSet: [{ data: "placeOfBirth" }, { data: "dateOfBirth", time: true }],
     separator: " / ",
   },
   {
@@ -107,12 +107,12 @@ export const userDetailTable = readable([
   },
   {
     Title: "Profession / Institution",
-    dataSet: ["profession", "institution"],
+    dataSet: [{ data: "profession" }, { data: "institution" }],
     separator: " / ",
   },
   {
     Title: "Phone Number",
-    dataSet: ["phoneCode", "phoneNo"],
+    dataSet: [{ data: "phoneCode" }, { data: "phoneNo" }],
     conditionalData: {
       data: "isWhatsapp",
       text: "Whatsapp Number",

@@ -10,7 +10,7 @@ export const bookMenu = [
     icon: "auto_stories",
   },
   {
-    name: "Take / Return Book",
+    name: "Find Borrow",
     link: "/book/borrow/action/",
     icon: "book",
   },

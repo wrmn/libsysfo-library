@@ -9,6 +9,12 @@ export const checkLogin = () => {
 
 export const getData = async () => {
   const msg = await getWithAuth(`/admin/library`);
+  if (msg.status == 401) {
+    f7.dialog.alert("Please login again", "Token Invalid", function () {
+      localStorage.removeItem("account-credential");
+      window.location.reload();
+    });
+  }
   userData.set(msg.data.profile);
   getDataSet();
 };

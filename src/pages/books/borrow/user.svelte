@@ -27,8 +27,13 @@
   let isHide = true;
   let searching = false;
   let popupOpened = false;
+
+  export let f7router;
+
   onMount(() => {
     userSearchList.set([]);
+    userResult.set({});
+    userDetail.set({});
   });
 </script>
 
@@ -124,11 +129,23 @@
         <Card class="demo-card-header-pic">
           <CardHeader class="no-border" valign="bottom">User Borrow</CardHeader>
           <CardContent>
-            <Borrow callApi={userBorrow($userResult)} viewUser={false} />
+            {#if $userResult.borrow.length > 0}
+              <Borrow
+                callApi={userBorrow($userResult.borrow)}
+                viewUser={false}
+                bind:f7router
+              />
+            {:else}
+              There is no borrow yet
+            {/if}
           </CardContent>
         </Card>
       </Col>
     </Row>
+  {:else}
+    <Card class="demo-card-header-pic">
+      <CardContent>Search username or user email</CardContent>
+    </Card>
   {/if}
 </Page>
 

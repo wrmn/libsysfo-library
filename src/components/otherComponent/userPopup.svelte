@@ -12,6 +12,7 @@
   } from "framework7-svelte";
   import { userDetail } from "../../js/store";
   import { userDetailTable } from "../../js/storeTable";
+  import { isoToDmy } from "../../js/utility";
 
   export let popupOpened = false;
 </script>
@@ -56,8 +57,13 @@
                           : "-"}
                       {:else if d.dataSet}
                         {#each d.dataSet as e, i}
-                          {$userDetail.profile[e]
-                            ? $userDetail.profile[e]
+                          {$userDetail.profile[e.data]
+                            ? e.time
+                              ? isoToDmy(
+                                  $userDetail.profile[e.data],
+                                  "dd mmmm yyyy"
+                                )
+                              : $userDetail.profile[e.data]
                             : "-"}
                           {#if i + 1 != d.dataSet.length && d.separator}
                             {d.separator}

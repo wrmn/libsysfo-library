@@ -40,7 +40,6 @@
         image.setAttribute("src", reader.result);
       });
       reader.readAsDataURL(file);
-      console.log(data);
       return;
     }
 

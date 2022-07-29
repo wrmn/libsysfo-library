@@ -5,13 +5,30 @@
     List,
     ListInput,
     ListItem,
+    ListButton,
+    f7,
     Button,
     Preloader,
+    Card,
+    CardHeader,
+    CardContent,
+    CardFooter,
+    Row,
+    Col,
   } from "framework7-svelte";
-  import { userSearchList, collectionSearchList } from "../../../js/store";
-  import { getUsers } from "../../../js/api/user";
+  import {
+    userSearchList,
+    collectionSearchList,
+    userDetail,
+    borrowResult,
+  } from "../../../js/store";
+  import { getUsers, userBorrow } from "../../../js/api/user";
   import { getCollections } from "../../../js/api/collection";
+  import { findBorrow } from "../../../js/api/borrow";
   import { onMount } from "svelte";
+
+  import Borrow from "../../../components/otherComponent/borrow.svelte";
+  import UserPopup from "../../../components/otherComponent/userPopup.svelte";
 
   const borrowParam = {};
 
@@ -19,12 +36,44 @@
   let kwHide = true;
   let snHide = true;
   let searching = false;
+  let popupOpened = false;
+
+  export let f7router;
 
   onMount(() => {
+    userDetail.set({});
+    borrowResult.set({});
     userSearchList.set([]);
     collectionSearchList.set([]);
   });
+
+  const sendAction = async (body) => {
+    const response = await borrowAction(body);
+
+    f7.dialog.alert(response.description, "", () => {
+      if (response.status == 200) {
+        f7router.back();
+      }
+    });
+  };
+
+  const runSearch = async () => {
+    if (borrowParam.cid && borrowParam.uid) {
+      f7.dialog.preloader();
+      borrowResult.set({});
+      userDetail.set({});
+      borrowResult.set(await findBorrow(borrowParam));
+      if ($borrowResult && $borrowResult.user) {
+        userDetail.set({
+          profile: $borrowResult.user,
+        });
+      }
+      f7.dialog.close();
+    }
+  };
 </script>
+
+<UserPopup bind:popupOpened />
 
 <Page>
   <Navbar title="Library Borrow" backLink="Back" />
@@ -46,6 +95,9 @@
         }, 200);
       }}
       on:input={() => {
+        delete borrowParam.uid;
+        borrowResult.set({});
+        userDetail.set({});
         userSearchList.set([]);
         kwHide = false;
         searching = true;
@@ -77,6 +129,9 @@
         }, 200);
       }}
       on:input={() => {
+        delete borrowParam.cid;
+        borrowResult.set({});
+        userDetail.set({});
         collectionSearchList.set([]);
         snHide = false;
         searching = true;
@@ -85,19 +140,12 @@
           searching = false;
           if (typeof sn == "string" && sn.length > 0) {
             collectionSearchList.set(await getCollections(sn));
-            console.log($collectionSearchList);
           } else {
             snHide = true;
           }
         }, 1000);
       }}
     />
-    <Button
-      fill
-      onClick={() => {
-        console.log(borrowParam);
-      }}>Search</Button
-    >
   </List>
   <div class:hide={kwHide} class="list-container kw-list">
     <List mediaList>
@@ -112,9 +160,9 @@
             subtitle={b.name}
             link="#"
             on:click={() => {
-              borrowParam.id = b.id;
+              borrowParam.uid = b.id;
               keyword = b.username ? b.username : b.email;
-              console.log(borrowParam);
+              runSearch();
             }}
           />
         {/each}
@@ -135,9 +183,9 @@
             subtitle={b.author}
             text={b.status.sn}
             on:click={async () => {
-              borrowParam.sn = b.status.sn;
+              borrowParam.cid = b.status.id;
               sn = b.status.sn;
-              console.log(borrowParam);
+              runSearch();
             }}
           >
             <img slot="media" src={b.image} width="80" alt="" />
@@ -146,6 +194,102 @@
       {/if}
     </List>
   </div>
+  {#if $borrowResult && $borrowResult.borrow}
+    <Row>
+      <Col width={100} medium={20}>
+        <Card class="demo-card-header-pic">
+          <CardHeader class="no-border" valign="bottom">Action</CardHeader>
+          <CardContent>
+            <List inset>
+              <ListButton
+                title="View User"
+                on:click={async () => {
+                  popupOpened = true;
+                }}
+              />
+              <ListButton
+                title="View Book"
+                href={`/book/detail/${borrowParam.cid}/`}
+              />
+              <ListButton
+                title="New Borrow"
+                on:click={() => {
+                  f7.dialog
+                    .create({
+                      title: "New Borrow",
+                      text: "Borrow Action state",
+                      buttons: [
+                        {
+                          text: "Request",
+                          onClick: () => {
+                            f7.dialog.confirm(
+                              `new Borrow request for user <br /> ${keyword} <br /> and book <br /> ${sn}`,
+                              "",
+                              () => {
+                                if (borrowParam.uid && borrowParam.cid) {
+                                  // sendAction({
+                                  //   state: "new",
+                                  //   userId: borrowParam.uid,
+                                  //   collectionId: borrowParam.cid,
+                                  // });
+                                  console.log({
+                                    state: "new",
+                                    userId: borrowParam.uid,
+                                    collectionId: borrowParam.cid,
+                                  });
+                                } else {
+                                  f7.dialog.create({
+                                    title: "State has been change",
+                                    text: "Please Input username or email and collection serial number again",
+                                  });
+                                }
+                              }
+                            );
+                          },
+                        },
+                        {
+                          text: "Take Book",
+                        },
+                        {
+                          text: "Cancel",
+                          color: "red",
+                        },
+                      ],
+                      verticalButtons: true,
+                    })
+                    .open();
+                }}
+              />
+            </List>
+          </CardContent>
+        </Card>
+      </Col>
+      <Col width={100} medium={70}>
+        <Card class="demo-card-header-pic">
+          <CardHeader class="no-border" valign="bottom">User Borrow</CardHeader>
+          <CardContent>
+            {#if $borrowResult.borrow.length > 0}
+              <Borrow
+                callApi={userBorrow($borrowResult.borrow)}
+                viewFilter={false}
+                viewUser={false}
+                viewBook={false}
+                bind:f7router
+              />
+            {:else}
+              There is no borrow yet
+            {/if}
+          </CardContent>
+        </Card>
+      </Col>
+    </Row>
+  {:else}
+    <Card class="demo-card-header-pic">
+      <CardContent>
+        Search username or user email and book serial number
+      </CardContent>
+    </Card>
+  {/if}
 </Page>
 
 <style>

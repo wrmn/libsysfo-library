@@ -61,6 +61,8 @@ export const userDetail = writable({});
 
 export const borrowsResult = writable([]);
 
+export const borrowResult = writable({});
+
 export const dashboardDataset = writable({});
 
 export const lineDataTemplate = {

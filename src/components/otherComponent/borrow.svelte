@@ -1,4 +1,5 @@
 <script>
+  import { onDestroy, onMount } from "svelte";
   import {
     Row,
     Col,
@@ -14,7 +15,6 @@
   import { borrowsResult, userDetail } from "../../js/store";
   import { borrowStatus, borrowDetailTable } from "../../js/storeTable";
   import { getUser } from "../../js/api/user";
-  import { onDestroy, onMount } from "svelte";
   import { borrowAction } from "../../js/api/borrow";
 
   import UserPopup from "./userPopup.svelte";
@@ -25,7 +25,7 @@
   let showResult = [];
   let desc = true;
   let popupOpened = false;
-  let field = "title";
+  let field = "createdAt";
 
   export let callApi;
   export let viewUser = true;
@@ -34,11 +34,6 @@
   export let f7router;
 
   onMount(async () => {
-    borrowsResult.set([]);
-    f7.dialog.preloader();
-    borrowsResult.set(await callApi);
-    f7.dialog.close();
-    showResult = $borrowsResult;
     calendarRange = f7.calendar.create({
       inputEl: "#demo-calendar-range",
       dateFormat: { day: "2-digit", month: "long", year: "numeric" },
@@ -50,6 +45,12 @@
         },
       },
     });
+    borrowsResult.set([]);
+    f7.dialog.preloader();
+    borrowsResult.set(await callApi);
+    showResult = $borrowsResult;
+    resultSort();
+    f7.dialog.close();
   });
 
   onDestroy(() => {

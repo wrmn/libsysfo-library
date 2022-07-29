@@ -26,7 +26,7 @@
 </script>
 
 <Page>
-  <Navbar backLink="Back" backLinkUrl="/">
+  <Navbar backLink="Back" backLinkUrl="/book/" backLinkForce>
     <NavTitle class="make-capital">Book Collection</NavTitle>
     <NavRight>
       <Link

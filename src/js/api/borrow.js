@@ -27,10 +27,7 @@ export const findBorrow = async (param) => {
   return {};
 };
 
-// export const newBorrow = async (head) => {};
-
 export const borrowAction = async (body) => {
-  console.log(`${path}/action`);
   const response = await postWithAuth(body, `${path}/action`);
-  return response
+  return response;
 };

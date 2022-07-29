@@ -10,6 +10,13 @@ import BorrowActionPage from "../pages/books/borrow/action.svelte";
 import BorrowUserPage from "../pages/books/borrow/user.svelte";
 
 import PaperPage from "../pages/papers/index.svelte";
+import PaperListPage from "../pages/papers/list.svelte";
+import PaperDetailPage from "../pages/papers/detail.svelte";
+import PaperAddPage from "../pages/papers/add.svelte";
+
+import PermissionPage from "../pages/papers/permission/index.svelte";
+import PermissionActionPage from "../pages/papers/permission/action.svelte";
+import PermissionUserPage from "../pages/papers/permission/user.svelte";
 
 import LibraryPage from "../pages/library/index.svelte";
 
@@ -59,6 +66,34 @@ var routes = [
   {
     path: "/paper/",
     component: PaperPage,
+    routes: [
+      {
+        path: "list/",
+        component: PaperListPage,
+      },
+      {
+        path: "detail/:id",
+        component: PaperDetailPage,
+      },
+      {
+        path: "add/",
+        component: PaperAddPage,
+      },
+      {
+        path: "permission/",
+        component: PermissionPage,
+        routes: [
+          {
+            path: "action/",
+            component: PermissionActionPage,
+          },
+          {
+            path: "user/",
+            component: PermissionUserPage,
+          },
+        ],
+      },
+    ],
   },
   {
     path: "/library/",

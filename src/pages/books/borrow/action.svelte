@@ -24,7 +24,7 @@
   } from "../../../js/store";
   import { getUsers, userBorrow } from "../../../js/api/user";
   import { getCollections } from "../../../js/api/collection";
-  import { findBorrow } from "../../../js/api/borrow";
+  import { borrowAction, findBorrow } from "../../../js/api/borrow";
   import { onMount } from "svelte";
 
   import Borrow from "../../../components/otherComponent/borrow.svelte";
@@ -202,21 +202,12 @@
           <CardContent>
             <List inset>
               <ListButton
-                title="View User"
-                on:click={async () => {
-                  popupOpened = true;
-                }}
-              />
-              <ListButton
-                title="View Book"
-                href={`/book/detail/${borrowParam.cid}/`}
-              />
-              <ListButton
                 title="New Borrow"
+                bgColor="green"
+                textColor="black"
                 on:click={() => {
                   f7.dialog
                     .create({
-                      title: "New Borrow",
                       text: "Borrow Action state",
                       buttons: [
                         {
@@ -227,12 +218,7 @@
                               "",
                               () => {
                                 if (borrowParam.uid && borrowParam.cid) {
-                                  // sendAction({
-                                  //   state: "new",
-                                  //   userId: borrowParam.uid,
-                                  //   collectionId: borrowParam.cid,
-                                  // });
-                                  console.log({
+                                  sendAction({
                                     state: "new",
                                     userId: borrowParam.uid,
                                     collectionId: borrowParam.cid,
@@ -249,6 +235,26 @@
                         },
                         {
                           text: "Take Book",
+                          onClick: () => {
+                            f7.dialog.confirm(
+                              `new Borrow taken by user <br /> ${keyword} <br /> and book <br /> ${sn}`,
+                              "",
+                              () => {
+                                if (borrowParam.uid && borrowParam.cid) {
+                                  sendAction({
+                                    state: "newTake",
+                                    userId: borrowParam.uid,
+                                    collectionId: borrowParam.cid,
+                                  });
+                                } else {
+                                  f7.dialog.create({
+                                    title: "State has been change",
+                                    text: "Please Input username or email and collection serial number again",
+                                  });
+                                }
+                              }
+                            );
+                          },
                         },
                         {
                           text: "Cancel",
@@ -260,11 +266,21 @@
                     .open();
                 }}
               />
+              <ListButton
+                title="View User"
+                on:click={async () => {
+                  popupOpened = true;
+                }}
+              />
+              <ListButton
+                title="View Book"
+                href={`/book/detail/${borrowParam.cid}/`}
+              />
             </List>
           </CardContent>
         </Card>
       </Col>
-      <Col width={100} medium={70}>
+      <Col width={100} medium={80}>
         <Card class="demo-card-header-pic">
           <CardHeader class="no-border" valign="bottom">User Borrow</CardHeader>
           <CardContent>

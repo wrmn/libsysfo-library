@@ -135,7 +135,7 @@
       <Col width={100} medium={35}>
         <table class="make-center">
           <thead>
-            {#each $dashboardTable as d}
+            {#each dashboardTable as d}
               <tr>
                 <th class="label-cell">{d.Title}</th>
                 <th class="numeric-cell">:</th>

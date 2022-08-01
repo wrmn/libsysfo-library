@@ -22,7 +22,7 @@
     getCollection,
     updateCollection,
   } from "../../js/api/collection";
-  import { userBorrow } from "../../js/api/user";
+  import { delayer } from "../../js/api";
   import { collectionData, booksList } from "../../js/store";
   import {
     bookDetailTable,
@@ -46,7 +46,6 @@
 
   onMount(async () => {
     f7.dialog.preloader();
-
     collectionData.set({});
     collectionData.set(await getCollection(id));
     f7.dialog.close();
@@ -154,7 +153,7 @@
                 <Col width={70}>
                   <table>
                     <thead>
-                      {#each $collectionDetailTable as d}
+                      {#each collectionDetailTable as d}
                         <tr>
                           <td class="label-cell">{d.Title}</td>
                           <td width={20} class="numeric-cell">:</td>
@@ -227,7 +226,7 @@
                 {/if}
                 <table>
                   <thead>
-                    {#each $bookDetailTable as d}
+                    {#each bookDetailTable as d}
                       <tr>
                         <td width={150} class="label-cell">{d.Title}</td>
                         <td width={20} class="numeric-cell">:</td>
@@ -260,13 +259,13 @@
               <table width="100%">
                 <thead>
                   <tr>
-                    {#each $collectionDetailTable as d}
+                    {#each collectionDetailTable as d}
                       <th class="label-cell">{d.Title}</th>
                     {/each}
                   </tr>
                   {#each $collectionData.alternativeCollection as c}
                     <tr>
-                      {#each $collectionDetailTable as d}
+                      {#each collectionDetailTable as d}
                         <th class="label-cell">
                           {#if c[d.data]}
                             {#if d.stats}
@@ -283,6 +282,7 @@
                       {/each}
                       <th>
                         <Button
+                          outline
                           on:click={() => {
                             f7.dialog.preloader();
                             f7router.back();
@@ -290,7 +290,7 @@
                               f7router.navigate(`/book/detail/${c.id}/`);
                               f7.dialog.close();
                             }, 500);
-                          }}>View Collection</Button
+                          }}>View</Button
                         >
                       </th>
                     </tr>
@@ -309,8 +309,9 @@
           <CardContent>
             {#if $collectionData.borrow && $collectionData.borrow.length > 0}
               <Borrow
-                callApi={userBorrow($collectionData.borrow)}
+                callApi={delayer($collectionData.borrow)}
                 viewBook={false}
+                viewFilter={false}
                 bind:f7router
               />
             {:else}

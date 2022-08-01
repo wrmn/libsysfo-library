@@ -1,5 +1,3 @@
-import { readable } from "svelte/store";
-
 export const bookStatus = {
   1: {
     color: "blue",
@@ -35,24 +33,24 @@ export const bookAvailability = {
 };
 
 export const borrowStatus = {
-  requested: {
-    color: "yellow",
-  },
-  accepted: {
-    color: "teal",
-  },
   taked: {
     color: "blue",
   },
   finished: {
     color: "green",
   },
+  requested: {
+    color: "yellow",
+  },
+  accepted: {
+    color: "teal",
+  },
   canceled: {
     color: "red",
   },
 };
 
-export const dashboardTable = readable([
+export const dashboardTable = [
   {
     Title: "Borrow Last 30 Days",
     data: "borrow",
@@ -69,9 +67,9 @@ export const dashboardTable = readable([
     Title: "Paper Total",
     data: "paper",
   },
-]);
+];
 
-export const userDetailTable = readable([
+export const userDetailTable = [
   {
     Title: "Username",
     data: "username",
@@ -118,9 +116,9 @@ export const userDetailTable = readable([
       text: "Whatsapp Number",
     },
   },
-]);
+];
 
-export const bookDetailTable = readable([
+export const bookDetailTable = [
   {
     Title: "Author",
     main: true,
@@ -146,9 +144,35 @@ export const bookDetailTable = readable([
     Title: "PageCount",
     data: "pageCount",
   },
-]);
+];
 
-export const collectionDetailTable = readable([
+export const paperDetailTable = [
+  {
+    title: "Title",
+    data: "title",
+  },
+  {
+    title: "Subject",
+    data: "subject",
+    array: true,
+  },
+  {
+    title: "Description",
+    data: "description",
+    object: true,
+  },
+  {
+    title: "Type",
+    data: "type",
+  },
+  {
+    title: "Public Access",
+    data: "access",
+    bool: true,
+  },
+];
+
+export const collectionDetailTable = [
   {
     Title: "Serial Number",
     data: "sn",
@@ -163,7 +187,7 @@ export const collectionDetailTable = readable([
     data: "availability",
     stats: bookAvailability,
   },
-]);
+];
 
 export const borrowDetailTable = [
   {
@@ -202,16 +226,40 @@ export const borrowDetailTable = [
   {
     title: "Book Serial Number",
     data: "serialNumber",
-    linkTo: "/book/detail/",
-    linkVar: "collectionId",
-    linkTitle: "view book",
   },
   {
     title: "User",
     data: "userName",
-    linkTo: "/user/detail/",
-    linkVar: "userId",
-    linkTitle: "view User",
+  },
+];
+
+export const permissionDetailTable = [
+  {
+    title: "Status",
+    data: "status",
+  },
+  {
+    title: "Requested At",
+    data: "createdAt",
+    time: true,
+  },
+  {
+    title: "Accepted At",
+    data: "acceptedAt",
+    time: true,
+  },
+  {
+    title: "Canceled At",
+    data: "canceledAt",
+    time: true,
+  },
+  {
+    title: "Title",
+    data: "title",
+  },
+  {
+    title: "User",
+    data: "userName",
   },
 ];
 

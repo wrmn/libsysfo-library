@@ -31,3 +31,22 @@ export const yearValues = {
     return arr;
   })(),
 };
+
+export const capitalize = (str) =>
+  str.replace(/\w\S*/g, (w) => w.replace(/^\w/, (c) => c.toUpperCase()));
+
+export const sorting = (a, b, field, desc) => {
+  let fa = a[field],
+    fb = b[field];
+  if (desc) {
+    fa = b[field];
+    fb = a[field];
+  }
+  if (fa < fb) {
+    return -1;
+  }
+  if (fa > fb) {
+    return 1;
+  }
+  return 0;
+};

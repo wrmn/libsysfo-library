@@ -1,5 +1,4 @@
 <script>
-  import { onDestroy, onMount } from "svelte";
   import {
     Row,
     Col,
@@ -14,11 +13,11 @@
     ListInput,
     Link,
   } from "framework7-svelte";
+  import { permissionResult, userDetail } from "../../js/store";
   import { isoToDmy, capitalize, sorting } from "../../js/utility";
-  import { borrowsResult, userDetail } from "../../js/store";
-  import { borrowStatus, borrowDetailTable } from "../../js/storeTable";
+  import { borrowStatus, permissionDetailTable } from "../../js/storeTable";
   import { getUser } from "../../js/api/user";
-  import { borrowAction } from "../../js/api/borrow";
+  import { onDestroy, onMount } from "svelte";
 
   import UserPopup from "./userPopup.svelte";
 
@@ -28,21 +27,52 @@
   ];
 
   let calendarRange,
-    status,
     sortCategory,
-    statusFilter = Object.keys(borrowStatus),
+    status,
+    keyword = "",
+    popupOpened = false,
+    statusFilter = Object.keys(borrowStatus).slice(2),
     timeFilter = [new Date("05/08/2017"), new Date()],
     showResult = [],
     desc = true,
-    popupOpened = false,
-    field = "createdAt",
-    keyword = "";
+    field = "createdAt";
 
   export let callApi,
+    f7router,
     viewUser = true,
-    viewBook = true,
-    viewFilter = true,
-    f7router;
+    viewPaper = true,
+    viewFilter = true;
+
+  const resultFilter = () => {
+    const keyFilter = new RegExp(keyword, "i"),
+      statsFilter = new RegExp("\\b" + statusFilter.join("\\b|\\b") + "\\b"),
+      startFilter = timeFilter[0].getTime(),
+      endFilter = timeFilter[1].getTime() + 24 * 60 * 60 * 1000;
+    showResult = $permissionResult.filter((d) => {
+      const createdAt = new Date(d.createdAt).getTime();
+      return (
+        (keyFilter.test(d.title) ||
+          keyFilter.test(d.subject.join()) ||
+          keyFilter.test(d.userName)) &&
+        statsFilter.test(d.status) &&
+        createdAt >= startFilter &&
+        createdAt <= endFilter
+      );
+    });
+    showResult = resultSort(showResult);
+  };
+
+  const resultSort = (arr) => arr.sort((a, b) => sorting(a, b, field, desc));
+
+  const sendAction = async (body) => {
+    const response = await permissionAction(body);
+
+    f7.dialog.alert(response.description, "", () => {
+      if (response.status == 200) {
+        f7router.back();
+      }
+    });
+  };
 
   onMount(async () => {
     calendarRange = f7.calendar.create({
@@ -56,48 +86,16 @@
         },
       },
     });
-    borrowsResult.set([]);
+    permissionResult.set([]);
     f7.dialog.preloader();
-    borrowsResult.set(await callApi);
-    showResult = resultSort($borrowsResult);
+    permissionResult.set(await callApi);
+    showResult = $permissionResult;
     f7.dialog.close();
   });
 
   onDestroy(() => {
-    borrowsResult.set([]);
+    permissionResult.set([]);
   });
-
-  const resultFilter = () => {
-    const keyFilter = new RegExp(keyword, "i"),
-      statsFilter = new RegExp("\\b" + statusFilter.join("\\b|\\b") + "\\b"),
-      startFilter = timeFilter[0].getTime(),
-      endFilter = timeFilter[1].getTime() + 24 * 60 * 60 * 1000;
-    showResult = resultSort(
-      $borrowsResult.filter((d) => {
-        const createdAt = new Date(d.createdAt).getTime();
-        return (
-          (keyFilter.test(d.title) ||
-            keyFilter.test(d.serialNumber) ||
-            keyFilter.test(d.userName)) &&
-          statsFilter.test(d.status) &&
-          createdAt >= startFilter &&
-          createdAt <= endFilter
-        );
-      })
-    );
-  };
-
-  const resultSort = (arr) => arr.sort((a, b) => sorting(a, b, field, desc));
-
-  const sendAction = async (body) => {
-    const response = await borrowAction(body);
-
-    f7.dialog.alert(response.description, "", () => {
-      if (response.status == 200) {
-        f7router.back();
-      }
-    });
-  };
 </script>
 
 {#if viewUser}
@@ -120,6 +118,7 @@
       />
     </List>
   </Popover>
+
   <Card>
     <CardContent>
       <List>
@@ -173,7 +172,7 @@
                       sortCategory.smartSelectInstance().close();
                     }}
                   >
-                    <option value="title">Book Title</option>
+                    <option value="title">Paper Title</option>
                     <option value="userName">User</option>
                     <option value="createdAt">Request Date</option>
                   </select>
@@ -181,7 +180,6 @@
               </Col>
             </Row>
           </Col>
-
           <Col width={100} medium={30}>
             <ListItem
               title="Status"
@@ -197,8 +195,12 @@
                 },
               }}
             >
-              <select name="status" multiple value={Object.keys(borrowStatus)}>
-                {#each Object.keys(borrowStatus) as k}
+              <select
+                name="status"
+                multiple
+                value={Object.keys(borrowStatus).slice(2)}
+              >
+                {#each Object.keys(borrowStatus).slice(2) as k}
                   <option value={k}>
                     {capitalize(k)}
                   </option>
@@ -238,8 +240,8 @@
 
 <Card>
   <CardContent>
-    {#if $borrowsResult.length == 0}
-      There is no borrow data yet.
+    {#if $permissionResult.length == 0}
+      There is no permission data yet.
     {:else if showResult.length == 0}
       Data not found.
     {:else}
@@ -247,7 +249,7 @@
         {#each showResult as p}
           <ListItem
             accordionItem
-            title={p.title}
+            title={capitalize(p.title)}
             footer={`${isoToDmy(p.createdAt, "dd-mm-yyyy")} - ${p.userName}`}
             header={p.serialNumber}
             badgeColor={borrowStatus[p.status].color}
@@ -257,30 +259,39 @@
               <div class="data-table make-capital">
                 <table class="borrow-detail-view">
                   <tbody>
-                    {#each borrowDetailTable as d}
+                    {#each permissionDetailTable as d}
                       {#if p[d.data]}
-                        <tr>
-                          <td>{d.title}</td>
-                          <td>:</td>
-                          <td>
-                            {d.time
-                              ? isoToDmy(p[d.data], "hh:MM:ss dd-mmmm-yyyy")
-                              : p[d.data]}
-                          </td>
-                        </tr>
+                        {#if d.object}
+                          {#each Object.keys(p[d.data]) as keys}
+                            <tr>
+                              <td>{keys}</td>
+                              <td>:</td>
+                              <td>{p[d.data][keys]} </td>
+                            </tr>
+                          {/each}
+                        {:else}
+                          <tr>
+                            <td>{d.title}</td>
+                            <td>:</td>
+                            <td>
+                              {d.time
+                                ? isoToDmy(p[d.data], "hh:MM:ss dd-mmmm-yyyy")
+                                : d.array
+                                ? p[d.data].join(", ")
+                                : p[d.data]}
+                            </td>
+                          </tr>
+                        {/if}
                       {/if}
                     {/each}
                   </tbody>
                 </table>
                 <div class="data-action">
                   <Row>
-                    {#if viewBook}
+                    {#if viewPaper}
                       <Col>
-                        <Button
-                          outline
-                          href={`/book/detail/${p.collectionId}/`}
-                        >
-                          View Book
+                        <Button outline href={`/paper/detail/${p.paperId}/`}>
+                          View Paper
                         </Button>
                       </Col>
                     {/if}
@@ -301,30 +312,24 @@
                       </Col>
                     {/if}
                   </Row>
-                  {#if !(p.returnedAt || p.canceledAt)}
+                  {#if !(p.acceptedAt || p.canceledAt)}
                     <Row class="padding-top">
-                      {#if !p.takedAt}
-                        <Col>
-                          <Button
-                            outline
-                            color="red"
-                            on:click={async () => {
-                              f7.dialog.confirm(
-                                "Reject this borrow?",
-                                "",
-                                () => {
-                                  sendAction({
-                                    state: "cancel",
-                                    borrowId: p.id,
-                                  });
-                                }
-                              );
-                            }}
-                          >
-                            Reject
-                          </Button>
-                        </Col>
-                      {/if}
+                      <Col>
+                        <Button
+                          outline
+                          color="red"
+                          on:click={async () => {
+                            f7.dialog.confirm("Reject this borrow?", "", () => {
+                              sendAction({
+                                state: "cancel",
+                                borrowId: p.id,
+                              });
+                            });
+                          }}
+                        >
+                          Reject
+                        </Button>
+                      </Col>
                       <Col>
                         <Button
                           fill
@@ -343,18 +348,15 @@
                             );
                           }}
                         >
-                          {p.acceptedAt
-                            ? p.takedAt
-                              ? "Return"
-                              : "Take"
-                            : "Accept"}
+                          Accept
                         </Button>
                       </Col>
                     </Row>
                   {/if}
+                  <div class="data-action" />
                 </div>
-              </div>
-            </AccordionContent>
+              </div></AccordionContent
+            >
           </ListItem>
         {/each}
       </List>

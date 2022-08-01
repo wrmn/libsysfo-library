@@ -1,10 +1,11 @@
 <script>
   import { Page, Navbar } from "framework7-svelte";
+  import { getPermission } from "../../../js/api/permission";
+  import Permission from "../../../components/otherComponent/permission.svelte";
+  export let f7router;
 </script>
 
 <Page>
   <Navbar title="Library Permission List" backLink="Back" />
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio exercitationem facere
-  dolores, qui nemo repellat vero dolor aspernatur quas enim maiores recusandae possimus
-  sunt voluptates voluptatem aut nesciunt laudantium modi.
+  <Permission callApi={getPermission()} bind:f7router />
 </Page>

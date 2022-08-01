@@ -44,7 +44,7 @@
           <Col width={50}>
             <table class="make-capital">
               <thead>
-                {#each $userDetailTable as d}
+                {#each userDetailTable as d}
                   <tr>
                     <td class="label-cell">{d.Title}</td>
                     <td width={20} class="numeric-cell">:</td>

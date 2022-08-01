@@ -63,6 +63,12 @@ export const borrowsResult = writable([]);
 
 export const borrowResult = writable({});
 
+export const papersList = writable([]);
+
+export const paperData = writable({});
+
+export const permissionResult = writable([]);
+
 export const dashboardDataset = writable({});
 
 export const lineDataTemplate = {

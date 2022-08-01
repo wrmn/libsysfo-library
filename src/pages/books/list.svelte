@@ -16,10 +16,10 @@
   import { getCollections } from "../../js/api/collection";
   import { booksList } from "../../js/store";
   import { bookStatus } from "../../js/storeTable";
-
-  f7.dialog.preloader();
+  import { capitalize } from "../../js/utility";
 
   onMount(async () => {
+    f7.dialog.preloader();
     booksList.set(await getCollections());
     f7.dialog.close();
   });
@@ -60,9 +60,7 @@
     {#each $booksList as book}
       <ListItem
         header={book.status.sn}
-        title={book.title.replace(/\w\S*/g, (w) =>
-          w.replace(/^\w/, (c) => c.toUpperCase())
-        )}
+        title={capitalize(book.title)}
         link={`/book/detail/${book.id}/`}
         popupClose
         subtitle={book.category}

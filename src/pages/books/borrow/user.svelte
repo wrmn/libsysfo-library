@@ -17,7 +17,8 @@
   } from "framework7-svelte";
 
   import { userSearchList, userResult, userDetail } from "../../../js/store";
-  import { getUser, getUsers, userBorrow } from "../../../js/api/user";
+  import { getUser, getUsers } from "../../../js/api/user";
+  import { delayer } from "../../../js/api";
   import { onMount } from "svelte";
 
   import Borrow from "../../../components/otherComponent/borrow.svelte";
@@ -131,7 +132,7 @@
           <CardContent>
             {#if $userResult.borrow.length > 0}
               <Borrow
-                callApi={userBorrow($userResult.borrow)}
+                callApi={delayer($userResult.borrow)}
                 viewUser={false}
                 bind:f7router
               />

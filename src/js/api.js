@@ -3,6 +3,8 @@ import { f7 } from "framework7-svelte";
 
 export const whenUnsuccess = (desc) => (desc ? desc : "server timeout");
 
+export const delayer = async (data) => data;
+
 export const postWithoutAuth = async (data, path) => {
   const request = new Request(`${serverUrl}${path}`, {
     method: "POST",

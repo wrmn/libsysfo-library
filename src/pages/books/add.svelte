@@ -146,7 +146,7 @@
               </h3>
               <table>
                 <thead>
-                  {#each $bookDetailTable as d}
+                  {#each bookDetailTable as d}
                     <tr>
                       <td width={150} class="label-cell">{d.Title}</td>
                       <td width={20} class="numeric-cell">:</td>

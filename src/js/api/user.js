@@ -22,5 +22,3 @@ export const getUser = async (id, subPath) => {
   }
   f7.dialog.alert(whenUnsuccess(response.description), "");
 };
-
-export const userBorrow = async (data) => data;

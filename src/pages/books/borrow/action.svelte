@@ -22,7 +22,8 @@
     userDetail,
     borrowResult,
   } from "../../../js/store";
-  import { getUsers, userBorrow } from "../../../js/api/user";
+  import { delayer } from "../../../js/api";
+  import { getUsers } from "../../../js/api/user";
   import { getCollections } from "../../../js/api/collection";
   import { borrowAction, findBorrow } from "../../../js/api/borrow";
   import { onMount } from "svelte";
@@ -286,7 +287,7 @@
           <CardContent>
             {#if $borrowResult.borrow.length > 0}
               <Borrow
-                callApi={userBorrow($borrowResult.borrow)}
+                callApi={delayer($borrowResult.borrow)}
                 viewFilter={false}
                 viewUser={false}
                 viewBook={false}

@@ -1,5 +1,5 @@
 <script>
-  import { Page, Navbar, f7 } from "framework7-svelte";
+  import { Page, Navbar } from "framework7-svelte";
   import { getBorrows } from "../../../js/api/borrow";
   import Borrow from "../../../components/otherComponent/borrow.svelte";
   export let f7router;

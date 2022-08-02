@@ -76,6 +76,10 @@ var routes = [
         component: PaperDetailPage,
       },
       {
+        path: "edit/:id",
+        component: PaperDetailPage,
+      },
+      {
         path: "add/",
         component: PaperAddPage,
       },

@@ -9,7 +9,8 @@
     CardHeader,
     Fab,
     Icon,
-    Button,
+    NavRight,
+    Link,
     f7,
   } from "framework7-svelte";
   import { onMount } from "svelte";
@@ -67,7 +68,17 @@
     backLink
     backLinkForce
     backLinkUrl="/paper/list/"
-  />
+  >
+    <NavRight>
+      <Link
+        iconIos="f7:pencil"
+        iconAurora="f7:pencil"
+        iconMd="material:edit"
+        tooltip="Edit"
+        href={`/paper/edit/${id}/`}
+      />
+    </NavRight>
+  </Navbar>
 
   <Row>
     <Col width={100} medium={50}>

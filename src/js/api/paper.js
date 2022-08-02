@@ -19,16 +19,7 @@ export const singlePaper = async (id) => {
   f7.dialog.alert(whenUnsuccess(response.description), "");
 };
 
-export const newPaper = async (data) => {
-  const response = await postWithAuth(data, `${path}/new`);
-  f7.dialog.alert(
-    response.description ? response.description : "server timeout",
-    ""
-  );
-  if (response.status == 200) {
-    return response;
-  }
-};
+export const newPaper = async (data) => await postWithAuth(data, `${path}/new`);
 
 export const updatePaper = async (id, data) => {
   let link = `${path}/${id}/update`;

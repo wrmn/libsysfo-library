@@ -7,12 +7,10 @@
     ListItem,
     ListButton,
     f7,
-    Button,
     Preloader,
     Card,
     CardHeader,
     CardContent,
-    CardFooter,
     Row,
     Col,
   } from "framework7-svelte";
@@ -33,11 +31,13 @@
 
   const borrowParam = {};
 
-  let keyword, sn, searchState;
-  let kwHide = true;
-  let snHide = true;
-  let searching = false;
-  let popupOpened = false;
+  let keyword,
+    sn,
+    searchState,
+    kwHide = true,
+    snHide = true,
+    searching = false,
+    popupOpened = false;
 
   export let f7router;
 

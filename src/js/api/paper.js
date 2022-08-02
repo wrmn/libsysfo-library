@@ -3,8 +3,9 @@ import { f7 } from "framework7-svelte";
 
 const path = "/admin/library/paper";
 
-export const getPapers = async () => {
-  const response = await getWithAuth(path);
+export const getPapers = async (pkw) => {
+  const link = pkw ? `${path}?pkw=${pkw}` : path;
+  const response = await getWithAuth(link);
   if (response.status == 200) {
     return response.data.paper;
   }

@@ -1,11 +1,11 @@
 export const bookMenu = [
   {
-    name: "Library Book Collection",
+    name: "Book Collection",
     link: "/book/list/",
     icon: "library_books",
   },
   {
-    name: "All Borrow History",
+    name: "Borrow History",
     link: "/book/borrow/",
     icon: "auto_stories",
   },
@@ -23,23 +23,23 @@ export const bookMenu = [
 
 export const paperMenu = [
   {
-    name: "Library Paper Collection",
+    name: "Paper Collection",
     link: "/paper/list/",
-    icon: "rectangle_stack",
+    icon: "doc_on_doc",
   },
   {
-    name: "All Paper permission",
+    name: "Permission List",
     link: "/paper/permission/",
     icon: "rectangle_stack",
   },
   {
-    name: "Find Permission",
-    link: "/paper/permission/action/",
+    name: "User Permission",
+    link: "/paper/permission/user/",
     icon: "rectangle_stack_badge_person_crop",
   },
   {
-    name: "User Access History",
-    link: "/paper/permission/user/",
+    name: "Access History",
+    link: "/paper/permission/action/",
     icon: "search_circle",
   },
 ];

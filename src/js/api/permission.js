@@ -29,7 +29,8 @@ export const findPermission = async (param) => {
   return {};
 };
 
-export const permissionAction = async (body) => {
-  const response = await postWithAuth(body, `${path}/action`);
-  return response;
-};
+export const permissionAction = async (body) =>
+  await postWithAuth(body, `${path}/action`);
+
+export const getAccess = async (id) =>
+  await getWithAuth(`${path}/${id}/access`);

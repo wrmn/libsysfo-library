@@ -2,6 +2,10 @@
   import {
     Row,
     Col,
+    Popup,
+    Page,
+    NavRight,
+    Navbar,
     Card,
     CardContent,
     List,
@@ -13,10 +17,11 @@
     ListInput,
     Link,
   } from "framework7-svelte";
-  import { permissionResult, userDetail } from "../../js/store";
+  import { accessHistory, permissionResult, userDetail } from "../../js/store";
   import { isoToDmy, capitalize, sorting } from "../../js/utility";
   import { borrowStatus, permissionDetailTable } from "../../js/storeTable";
   import { getUser } from "../../js/api/user";
+  import { permissionAction, getAccess } from "../../js/api/permission";
   import { onDestroy, onMount } from "svelte";
 
   import UserPopup from "./userPopup.svelte";
@@ -31,6 +36,7 @@
     status,
     keyword = "",
     popupOpened = false,
+    accessPopUp = false,
     statusFilter = Object.keys(borrowStatus).slice(2),
     timeFilter = [new Date("05/08/2017"), new Date()],
     showResult = [],
@@ -101,6 +107,29 @@
 {#if viewUser}
   <UserPopup bind:popupOpened />
 {/if}
+
+<Popup
+  class="demo-popup"
+  bind:opened={accessPopUp}
+  onPopupClosed={() => (accessPopUp = false)}
+>
+  <Page>
+    <Navbar title="Access History">
+      <NavRight>
+        <Link popupClose iconF7="xmark" iconSize="35px" />
+      </NavRight>
+    </Navbar>
+    {#if $accessHistory.data && $accessHistory.data.access.total > 0}
+      <List simpleList>
+        {#each $accessHistory.data.access.time as time}
+          <ListItem title={isoToDmy(time, "dd-mmmm-yyyy hh:MM:ss ")} />
+        {/each}
+      </List>
+    {:else}
+      There is no access yet
+    {/if}
+  </Page>
+</Popup>
 
 {#if viewFilter}
   <Popover class="popover-searchbar" backdrop={false} closeOnEscape>
@@ -311,6 +340,22 @@
                         </Button>
                       </Col>
                     {/if}
+                    {#if p.status == "accepted"}
+                      <Col>
+                        <Button
+                          outline
+                          on:click={async () => {
+                            f7.dialog.preloader();
+                            accessHistory.set([]);
+                            accessHistory.set(await getAccess(p.id));
+                            f7.dialog.close();
+                            accessPopUp = true;
+                          }}
+                        >
+                          Access History
+                        </Button>
+                      </Col>
+                    {/if}
                   </Row>
                   {#if !(p.acceptedAt || p.canceledAt)}
                     <Row class="padding-top">
@@ -322,7 +367,7 @@
                             f7.dialog.confirm("Reject this borrow?", "", () => {
                               sendAction({
                                 state: "cancel",
-                                borrowId: p.id,
+                                permissionId: p.id,
                               });
                             });
                           }}
@@ -341,8 +386,8 @@
                               "",
                               () => {
                                 sendAction({
-                                  state: "next",
-                                  borrowId: p.id,
+                                  state: "accept",
+                                  permissionId: p.id,
                                 });
                               }
                             );

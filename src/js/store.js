@@ -69,6 +69,12 @@ export const paperData = writable({});
 
 export const paperSubject = writable([]);
 
+export const paperDetail = writable({});
+
+export const paperSearchList = writable([]);
+
+export const accessHistory = writable([]);
+
 export const permissionResult = writable([]);
 
 export const dashboardDataset = writable({});

@@ -15,7 +15,7 @@
 </script>
 
 <List inlineLabels noHairlinesMd>
-  <ListInput label="Title" bind:value={title} type="text" clearButton />
+  <ListInput label="Title" bind:value={title} type="textarea" resizable />
   <ListItem
     title="Paper Type"
     smartSelect

@@ -15,8 +15,8 @@
     f7,
   } from "framework7-svelte";
   import { onMount } from "svelte";
-  import { paperSubject } from "../../js/store";
-  import { newPaper } from "../../js/api/paper";
+  import { paperSubject, papersList } from "../../js/store";
+  import { newPaper, getPapers } from "../../js/api/paper";
   import Paper from "../../components/inputComponent/paper.svelte";
 
   let type = "journal",
@@ -24,7 +24,7 @@
     access = true,
     abstract,
     paperFile;
-    
+
   let input, files;
 
   export let f7router;
@@ -120,7 +120,6 @@
     text="Create"
     on:click={async () => {
       f7.dialog.alert("save changes?", "", async () => {
-        f7.dialog.preloader();
         const description = {};
 
         desc.forEach((e) => {
@@ -139,10 +138,10 @@
 
         let invalid = false;
         Object.keys(body).every((k) => {
-          if (
-            (!body[k] || body[k].length < 1) &&
-            (k !== "access" || k != "description")
-          ) {
+          if (k == "access" || k == "description") {
+            return true;
+          }
+          if (!body[k] || body[k].length < 1) {
             f7.dialog.alert(`${k} can't be empty`, "");
             invalid = true;
             return false;
@@ -152,13 +151,16 @@
         if (invalid) {
           return;
         }
+        f7.dialog.preloader();
+
         const resp = await newPaper(body);
         f7.dialog.close();
         f7.dialog.alert(
           resp.description ? resp.description : "server timeout",
           "",
-          () => {
+          async () => {
             if (resp.status && resp.status == 200) {
+              papersList.set(await getPapers());
               f7router.back();
             }
           }

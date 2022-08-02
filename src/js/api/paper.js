@@ -24,14 +24,12 @@ export const newPaper = async (data) => await postWithAuth(data, `${path}/new`);
 export const updatePaper = async (id, data) => {
   let link = `${path}/${id}/update`;
   if (data.file) {
-    link = `{$link}/file`;
+    link = `${link}/file`;
   }
   const response = await postWithAuth(data, link);
-  f7.dialog.alert(
-    response.description ? response.description : "server timeout",
-    ""
-  );
+
   if (response.status == 200) {
     return response;
   }
+  return {};
 };

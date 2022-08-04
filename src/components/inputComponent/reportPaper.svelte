@@ -11,9 +11,8 @@
   } from "framework7-svelte";
   import { onMount } from "svelte";
   import { getReport } from "../../js/api";
-  import { getCollections } from "../../js/api/collection";
-  import { categories } from "../../js/storeTable";
-  import { collectionSearchList } from "../../js/store";
+  import { getPapers } from "../../js/api/paper";
+  import { paperSearchList } from "../../js/store";
   import { isoToDmy } from "../../js/utility";
 
   let calendarRange,
@@ -25,13 +24,13 @@
   let keyword,
     searchState,
     searching = false,
-    bookid;
+    paperid;
 
   const timeData = ["from", "to"];
 
   onMount(() => {
     calendarRange = f7.calendar.create({
-      inputEl: "#book-range",
+      inputEl: "#paper-range",
       dateFormat: { day: "2-digit", month: "long", year: "numeric" },
       rangePicker: true,
       on: {
@@ -42,9 +41,9 @@
     });
   });
 
-  const actionBooks = () => {
+  const actionPapers = () => {
     var query = new URLSearchParams();
-    let path = "book?";
+    let path = "paper?";
     timeFilter.forEach((e, i) => {
       query.append(timeData[i], isoToDmy(e, "yyyymmdd"));
     });
@@ -59,21 +58,20 @@
     dateInput.value = "";
     all = true;
     timeFilter = [new Date("05/08/2017"), new Date()];
-
     getReport(`${path}${query.toString()}`);
   };
 
-  const actionBook = () => {
-    if (bookid) {
-      getReport(`book/${bookid}`);
+  const actionPaper = () => {
+    if (paperid) {
+      getReport(`paper/${paperid}`);
     } else {
-      f7.dialog.alert("Please select book first", "");
+      f7.dialog.alert("please select paper", "");
     }
   };
 </script>
 
 <List accordionList>
-  <ListItem accordionItem title="Multiple Books" accordionItemOpened>
+  <ListItem accordionItem title="Multiple Papers" accordionItemOpened>
     <AccordionContent>
       <List>
         <BlockTitle>Category</BlockTitle>
@@ -104,15 +102,13 @@
           bind:disabled={all}
           bind:this={category}
           smartSelectParams={{
-            openIn: "popup",
-            searchbar: true,
-            searchbarPlaceholder: "Search Category",
+            openIn: "popover",
           }}
         >
           <select name="category" multiple value={[""]}>
-            {#each categories as bookCategory}
-              <option value={bookCategory}>{bookCategory}</option>
-            {/each}
+            <option value="thesis">Thesis</option>
+            <option value="journal">Journal</option>
+            <option value="other document">Other Document</option>
           </select>
         </ListItem>
         <BlockTitle>Date Created</BlockTitle>
@@ -126,7 +122,7 @@
                   placeholder="Select date range"
                   bind:this={dateInput}
                   readonly="readonly"
-                  id="book-range"
+                  id="paper-range"
                 />
                 <span
                   class="input-clear-button"
@@ -138,18 +134,18 @@
             </div>
           </div>
         </div>
-        <Button fill on:click={actionBooks}>Get Report</Button>
+        <Button fill on:click={actionPapers}>Get Report</Button>
       </List>
     </AccordionContent>
   </ListItem>
-  <ListItem accordionItem title="Single Book">
+  <ListItem accordionItem title="Single paper">
     <AccordionContent>
       <List noHairlinesMd>
         <ListInput
-          label="Book"
+          label="Paper"
           floatingLabel
           type="text"
-          placeholder="Book Title or serial number"
+          placeholder="Title keyword"
           bind:value={keyword}
           on:blur={() => {
             setTimeout(function () {}, 200);
@@ -158,13 +154,13 @@
             setTimeout(function () {}, 200);
           }}
           on:input={() => {
-            bookid = undefined;
+            paperid = undefined;
             searching = true;
             clearTimeout(searchState);
             searchState = setTimeout(async () => {
               searching = false;
               if (typeof keyword == "string" && keyword.length > 0) {
-                collectionSearchList.set(await getCollections(keyword));
+                paperSearchList.set(await getPapers(keyword));
               } else {
               }
             }, 1000);
@@ -177,25 +173,22 @@
                 <Preloader color="multi" />
               </ListItem>
             {:else}
-              {#each $collectionSearchList as b}
+              {#each $paperSearchList as b}
                 <ListItem
+                  title={`${b.title}`}
+                  subtitle={b.type}
                   link="#"
-                  title={b.title}
-                  subtitle={b.author}
-                  text={b.status.sn}
                   on:click={() => {
-                    bookid = b.id;
-                    keyword = b.status.sn;
-                    collectionSearchList.set([]);
+                    paperid = b.id;
+                    keyword = b.title;
+                    paperSearchList.set([]);
                   }}
-                >
-                  <img slot="media" src={b.image} width="80" alt="" />
-                </ListItem>
+                />
               {/each}
             {/if}
           </List>
         </ListItem>
-        <Button fill on:click={actionBook}>Get Report</Button>
+        <Button fill on:click={actionPaper}>Get Report</Button>
       </List>
     </AccordionContent>
   </ListItem>

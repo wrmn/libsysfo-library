@@ -107,11 +107,7 @@
       />
       <Link tabLink="#view-book" iconF7="book" text="Book" />
       <Link tabLink="#view-paper" iconF7="doc_on_doc" text="Paper" />
-      <Link
-        tabLink="#view-report"
-        iconF7="building_columns_fill"
-        text="Report"
-      />
+      <Link tabLink="#view-report" iconF7="doc_plaintext" text="Report" />
       <Link
         tabLink="#view-library"
         iconF7="building_columns_fill"

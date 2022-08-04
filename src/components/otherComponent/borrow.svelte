@@ -46,7 +46,7 @@
 
   onMount(async () => {
     calendarRange = f7.calendar.create({
-      inputEl: "#demo-calendar-range",
+      inputEl: "#borrow-calendar-range",
       dateFormat: { day: "2-digit", month: "long", year: "numeric" },
       rangePicker: true,
       on: {
@@ -216,7 +216,7 @@
                       type="text"
                       placeholder="Select date range"
                       readonly="readonly"
-                      id="demo-calendar-range"
+                      id="borrow-calendar-range"
                     />
                     <span
                       class="input-clear-button"

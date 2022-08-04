@@ -61,12 +61,4 @@ export const reportMenu = [
     name: "Permission",
     icon: "document_scanner",
   },
-  {
-    name: "Monthly",
-    icon: "calendar_month",
-  },
-  {
-    name: "User",
-    icon: "account_box",
-  },
 ];

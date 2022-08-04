@@ -7,6 +7,8 @@
   import ReportPopup from "../../components/popupComponent/reportPopup.svelte";
   import ReportBorrow from "../../components/inputComponent/reportBorrow.svelte";
   import ReportBook from "../../components/inputComponent/reportBook.svelte";
+  import ReportPaper from "../../components/inputComponent/reportPaper.svelte";
+  import ReportPermission from "../../components/inputComponent/reportPermission.svelte";
 
   let popupOpened = [false, false, false, false, false, false];
 </script>
@@ -38,11 +40,11 @@
   <span slot="form"> <ReportBook /> </span>
 </ReportPopup>
 <ReportPopup bind:popupOpened={popupOpened[1]}>
-  <span slot="form"> done </span>
+  <span slot="form"> <ReportPaper /> </span>
 </ReportPopup>
 <ReportPopup bind:popupOpened={popupOpened[2]}>
   <span slot="form"> <ReportBorrow /> </span>
 </ReportPopup>
 <ReportPopup bind:popupOpened={popupOpened[3]}>
-  <span slot="form"> work </span>
+  <span slot="form"> <ReportPermission /> </span>
 </ReportPopup>

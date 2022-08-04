@@ -11,7 +11,7 @@
 
   onMount(() => {
     calendarRange = f7.calendar.create({
-      inputEl: "#borrow-range",
+      inputEl: "#permission-range",
       dateFormat: { day: "2-digit", month: "long", year: "numeric" },
       rangePicker: true,
       on: {
@@ -22,9 +22,9 @@
     });
   });
 
-  const actionBorrow = () => {
+  const actionPermission = () => {
     var query = new URLSearchParams();
-    let path = "borrow?";
+    let path = "permission?";
     timeFilter.forEach((e, i) => {
       query.append(timeData[i], isoToDmy(e, "yyyymmdd"));
     });
@@ -46,7 +46,7 @@
             placeholder="Select date range"
             bind:this={dateInput}
             readonly="readonly"
-            id="borrow-range"
+            id="permission-range"
           />
           <span
             class="input-clear-button"
@@ -58,5 +58,5 @@
       </div>
     </div>
   </div>
-  <Button fill on:click={actionBorrow}>Get Report</Button>
+  <Button fill on:click={actionPermission}>Get Report</Button>
 </List>

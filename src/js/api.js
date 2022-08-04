@@ -58,6 +58,30 @@ export const getWithAuth = async (path) => {
   }
 };
 
+export const getReport = async (path) => {
+  const myHeaders = new Headers();
+  if (localStorage.getItem("account-credential")) {
+    myHeaders.append(
+      "Authorization",
+      `Bearer ${localStorage.getItem("account-credential")}`
+    );
+    const request = new Request(`${serverUrl}/admin/library/report/${path}`, {
+      method: "GET",
+      headers: myHeaders,
+    });
+
+    const response = await fetch(request).catch(handleError);
+    if (response.status != 200) {
+      const js = await response.json();
+      f7.dialog.alert(whenUnsuccess(js.description), "");
+      return;
+    }
+    const blob = await response.blob();
+    let file = window.URL.createObjectURL(blob);
+    window.location.assign(file);
+  }
+};
+
 const handleError = (err) => {
   console.warn(err);
   f7.dialog.close();

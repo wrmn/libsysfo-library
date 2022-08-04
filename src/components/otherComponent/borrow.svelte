@@ -20,7 +20,7 @@
   import { getUser } from "../../js/api/user";
   import { borrowAction } from "../../js/api/borrow";
 
-  import UserPopup from "./userPopup.svelte";
+  import UserPopup from "../popupComponent/userPopup.svelte";
 
   const sortIcons = [
     { icon: "sort_up", desc: false },

@@ -26,7 +26,7 @@
   import { isoToDmy } from "../../../js/utility";
   import { findPermission } from "../../../js/api/permission";
 
-  import UserPopup from "../../../components/otherComponent/userPopup.svelte";
+  import UserPopup from "../../../components/popupComponent/userPopup.svelte";
 
   let ukw,
     pkw,

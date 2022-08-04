@@ -103,10 +103,15 @@
         tabLink="#view-dashboard"
         tabLinkActive
         iconF7="chart_bar_square"
-        text="Dashboard"
+        text="Home"
       />
-      <Link tabLink="#view-book" iconF7="book" text="Book Collection" />
+      <Link tabLink="#view-book" iconF7="book" text="Book" />
       <Link tabLink="#view-paper" iconF7="doc_on_doc" text="Paper" />
+      <Link
+        tabLink="#view-report"
+        iconF7="building_columns_fill"
+        text="Report"
+      />
       <Link
         tabLink="#view-library"
         iconF7="building_columns_fill"
@@ -117,6 +122,7 @@
     <View id="view-dashboard" main tab tabActive url="/" />
     <View id="view-book" name="books" tab url="/book/" />
     <View id="view-paper" name="papers" tab url="/paper/" />
+    <View id="view-report" name="reports" tab url="/report/" />
     <View id="view-library" name="library" tab url="/library/" />
   </Views>
 </App>

@@ -24,7 +24,7 @@
   import { permissionAction, getAccess } from "../../js/api/permission";
   import { onDestroy, onMount } from "svelte";
 
-  import UserPopup from "./userPopup.svelte";
+  import UserPopup from "../popupComponent/userPopup.svelte";
 
   const sortIcons = [
     { icon: "sort_up", desc: false },

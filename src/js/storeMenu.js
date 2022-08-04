@@ -43,3 +43,30 @@ export const paperMenu = [
     icon: "search_circle",
   },
 ];
+
+export const reportMenu = [
+  {
+    name: "Book",
+    icon: "menu_book",
+  },
+  {
+    name: "Paper",
+    icon: "description",
+  },
+  {
+    name: "Borrow",
+    icon: "auto_stories",
+  },
+  {
+    name: "Permission",
+    icon: "document_scanner",
+  },
+  {
+    name: "Monthly",
+    icon: "calendar_month",
+  },
+  {
+    name: "User",
+    icon: "account_box",
+  },
+];

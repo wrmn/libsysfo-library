@@ -18,6 +18,8 @@ import PermissionPage from "../pages/papers/permission/index.svelte";
 import PermissionActionPage from "../pages/papers/permission/action.svelte";
 import PermissionUserPage from "../pages/papers/permission/user.svelte";
 
+import ReportPage from "../pages/report/index.svelte";
+
 import LibraryPage from "../pages/library/index.svelte";
 
 import SettingPage from "../pages/settings/settings.svelte";
@@ -98,6 +100,10 @@ var routes = [
         ],
       },
     ],
+  },
+  {
+    path: "/report/",
+    component: ReportPage,
   },
   {
     path: "/library/",

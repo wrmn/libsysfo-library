@@ -22,7 +22,7 @@
   import { onMount } from "svelte";
 
   import Borrow from "../../../components/otherComponent/borrow.svelte";
-  import UserPopup from "../../../components/otherComponent/userPopup.svelte";
+  import UserPopup from "../../../components/popupComponent/userPopup.svelte";
 
   let keyword, searchState;
   let isHide = true;

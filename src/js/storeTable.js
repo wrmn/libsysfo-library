@@ -270,6 +270,8 @@ export const categories = [
   "Buddhism & Hinduism",
   "Business & Investing",
   "Children",
+  "Children Age 0-3",
+  "Children Age 4-7",
   "Christianity",
   "Classics",
   "Comics & Graphic Novels",

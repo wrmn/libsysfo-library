@@ -20,7 +20,7 @@
   import { delayer } from "../../../js/api";
   import { onMount } from "svelte";
 
-  import UserPopup from "../../../components/otherComponent/userPopup.svelte";
+  import UserPopup from "../../../components/popupComponent/userPopup.svelte";
   import Permission from "../../../components/otherComponent/permission.svelte";
 
   let keyword,

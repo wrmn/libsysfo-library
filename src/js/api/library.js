@@ -11,11 +11,11 @@ export const updateGeneral = async (data) => {
   return {};
 };
 
-export const updateImage = async (data) => {
-  const response = await postWithAuth(data, `${path}/image`);
+export const updateImage = async (data) =>
+  await postWithAuth(data, `${path}/image`);
 
-  if (response.status == 200) {
-    return response;
-  }
-  return {};
-};
+export const updateImageContent = async (data) =>
+  await postWithAuth(data, `${path}/image/content`);
+
+export const updateLocation = async (data) =>
+  await postWithAuth(data, `${path}/location`);

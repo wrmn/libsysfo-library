@@ -1,13 +1,15 @@
 <script>
   import { Button, f7, List } from "framework7-svelte";
-  import { updateImage } from "../../js/api/library";
+  import { updateImageContent } from "../../js/api/library";
   import { getData } from "../../js/api/profile";
   let input,
     files,
     container,
     image,
     showImage = false,
-    body;
+    fileByte;
+
+  export let imgIndex;
   function onChange() {
     const file = input.files[0];
 
@@ -16,7 +18,7 @@
 
       const reader = new FileReader();
       reader.addEventListener("load", function () {
-        body = reader.result.split(",")[1];
+        fileByte = reader.result.split(",")[1];
         image.setAttribute("src", reader.result);
       });
       reader.readAsDataURL(file);
@@ -25,6 +27,26 @@
 
     showImage = false;
   }
+
+  const sendUpdate = (body) => {
+    f7.dialog.preloader();
+    setTimeout(async () => {
+      const resp = await updateImageContent(body);
+      f7.dialog.close();
+      f7.dialog.alert(
+        resp.description ? resp.description : "server timeout",
+        "",
+        async () => {
+          if (resp.status && resp.status == 200) {
+            getData();
+            fileByte = undefined;
+            showImage = false;
+          }
+        }
+      );
+    }, 500);
+    return;
+  };
 </script>
 
 <List>
@@ -45,25 +67,16 @@
   </div>
   <Button
     fill
-    onClick={async () => {
-      if (body) {
-        f7.dialog.preloader();
-        setTimeout(async () => {
-          const resp = await updateImage({ file: body });
-          f7.dialog.close();
-          f7.dialog.alert(
-            resp.description ? resp.description : "server timeout",
-            "",
-            async () => {
-              if (resp.status && resp.status == 200) {
-                getData();
-              }
-            }
-          );
-        }, 500);
-        return;
+    onClick={() => {
+      if (fileByte) {
+        sendUpdate({
+          action: "edit",
+          index: imgIndex,
+          file: fileByte,
+        });
+      } else {
+        f7.dialog.alert("please select image first", "");
       }
-      f7.dialog.alert("please select image first", "");
     }}>Save</Button
   >
 </List>

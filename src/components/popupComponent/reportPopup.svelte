@@ -18,7 +18,7 @@
   onPopupClosed={() => (popupOpened = false)}
 >
   <Page>
-    <Navbar title="User Information">
+    <Navbar>
       <NavRight>
         <Link popupClose iconF7="xmark" iconSize="35px" />
       </NavRight>

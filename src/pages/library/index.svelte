@@ -1,5 +1,13 @@
 <script>
-  import { Page, Block, Row, Col, Button, BlockTitle } from "framework7-svelte";
+  import {
+    Page,
+    Block,
+    Row,
+    Col,
+    Button,
+    BlockTitle,
+    f7,
+  } from "framework7-svelte";
   import { userData } from "../../js/store";
   import { Map } from "@beyonk/svelte-mapbox";
 
@@ -17,6 +25,7 @@
   let center = { lat: -0.9345808, lng: 100.37 };
 
   let generalEdit,
+    editState = false,
     popupEditImage = false;
 </script>
 
@@ -72,20 +81,12 @@
         </Col>
       </Row>
     {:else}
-      <!--  name, webpage, address, description -->
       <LibraryGeneral bind:generalEdit />
     {/if}
   </Block>
   <BlockTitle>Gallery</BlockTitle>
   <Block strong>
-    <Row>
-      <Col width={60} />
-      <Col width={40}>
-        <Button fill>Edit Gallery</Button>
-      </Col>
-    </Row>
-    <br />
-    <Gallery photos={$userData.contentImages} />
+    <Gallery />
   </Block>
 
   <div
@@ -102,21 +103,41 @@
     <Block strong>
       <Row>
         <Col width={60} />
-        <Col width={40}>
-          <Button fill>Edit Location</Button>
+        <Col width={20}>
+          <Button
+            fill
+            on:click={() => {
+              mapComponent.resize();
+              mapComponent.flyTo({
+                center: $userData.coordinate,
+                zoom: 13,
+              });
+              markerComponent.refreshMarker();
+            }}>Find</Button
+          >
+        </Col><Col width={20}>
+          <Button
+            fill
+            on:click={() => {
+              editState = !editState;
+              if (editState) {
+                f7.dialog.alert("click location on the map", "");
+              }
+            }}>{editState ? "Cancel" : "Edit"}</Button
+          >
         </Col>
       </Row>
       <div class="map-wrap">
         <!-- NOTE: enable this code to show map -->
-        <!-- <Map
+        <Map
           bind:this={mapComponent}
           accessToken={mapboxToken}
           style="mapbox://styles/warmoa/cl3wwp1qa000414mqrf1cx8b4"
           {center}
           bind:zoom
         >
-          <Marker marker={$userData.coordinate} bind:this={markerComponent} />
-        </Map> -->
+          <Marker bind:this={markerComponent} bind:editState />
+        </Map>
       </div>
     </Block>
   </div>

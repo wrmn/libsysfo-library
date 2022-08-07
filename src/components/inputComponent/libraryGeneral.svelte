@@ -5,12 +5,15 @@
   import { userData } from "../../js/store";
   import { getData } from "../../js/api/profile";
 
-  let name, webpage, address, description;
+  let name, webpage, address, description, borrowLimit;
   onMount(() => {
-    name = $userData.libraryName;
-    webpage = $userData.webpage;
-    address = $userData.libraryAddress;
-    description = $userData.description;
+    if ($userData) {
+      name = $userData.libraryName;
+      webpage = $userData.webpage;
+      address = $userData.libraryAddress;
+      description = $userData.description;
+      borrowLimit = $userData.libraryBorrowLimit;
+    }
   });
 
   export let generalEdit;
@@ -20,6 +23,7 @@
   <ListInput label="Name" type="text" bind:value={name} />
   <ListInput label="Webpage" type="text" bind:value={webpage} />
   <ListInput label="Address" type="textarea" bind:value={address} />
+  <ListInput label="Borrow Limit" type="number" bind:value={borrowLimit} />
   <ListInput label="Description" type="textarea" bind:value={description} />
   <Button
     fill
@@ -32,6 +36,7 @@
             webpage,
             address,
             description,
+            borrowLimit: parseInt(borrowLimit),
           });
           f7.dialog.close();
           generalEdit = !generalEdit;
@@ -45,7 +50,9 @@
             }
           );
         }, 500);
+      } else {
+        f7.dialog.alert("fill all information");
       }
-    }}>Edit</Button
+    }}>Save</Button
   >
 </List>

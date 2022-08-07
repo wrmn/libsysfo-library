@@ -21,6 +21,7 @@
 
   import routes from "../js/routes";
   import store from "../js/store";
+  import { getNotification } from "../js/api";
 
   const device = getDevice();
   // Framework7 Parameters
@@ -57,6 +58,10 @@
     checkLogin();
     if (localStorage.getItem("account-credential")) {
       getData();
+      getNotification();
+      setInterval(function () {
+        getNotification();
+      }, 5000);
     }
     f7ready(() => {
       // Init cordova APIs (see cordova-app.js)

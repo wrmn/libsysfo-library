@@ -8,6 +8,7 @@
     ListItem,
     Badge,
     f7,
+    Button,
     Searchbar,
     Link,
     theme,
@@ -21,6 +22,9 @@
   onMount(async () => {
     f7.dialog.preloader();
     booksList.set(await getCollections());
+    if ($booksList.length < 1) {
+      f7.dialog.alert("No book collection found", "");
+    }
     f7.dialog.close();
   });
 </script>
@@ -56,6 +60,18 @@
   <List class="searchbar-not-found">
     <ListItem title="Nothing found" />
   </List>
+  {#if $booksList.length < 1}
+    <h1>Add Book Collection</h1>
+
+    <Button
+      fill
+      iconIos="f7:plus"
+      iconAurora="f7:plus"
+      iconMd="material:add"
+      tooltip="New Collection"
+      href="/book/add/"
+    />
+  {/if}
   <List mediaList class="search-list searchbar-found">
     {#each $booksList as book}
       <ListItem

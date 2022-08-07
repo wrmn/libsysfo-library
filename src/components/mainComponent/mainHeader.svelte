@@ -1,6 +1,6 @@
 <script>
   import { Navbar, NavRight, NavLeft, Link, NavTitle } from "framework7-svelte";
-  import { userData } from "../../js/store";
+  import { notificationCount, userData } from "../../js/store";
 </script>
 
 <Navbar sliding={false}>
@@ -20,6 +20,8 @@
       iconIos="f7:bell_fill"
       iconAurora="f7:bell_fill"
       iconMd="material:notifications"
+      badge={$notificationCount}
+      badgeColor="red"
       panelOpen="right"
     />
   </NavRight>

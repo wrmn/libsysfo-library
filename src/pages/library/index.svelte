@@ -7,6 +7,7 @@
     Button,
     BlockTitle,
     f7,
+    Link,
   } from "framework7-svelte";
   import { userData } from "../../js/store";
   import { Map } from "@beyonk/svelte-mapbox";
@@ -62,12 +63,18 @@
             {$userData.libraryName}
           </h1>
           <a round class="link external" href={$userData.webpage}>
-            {$userData.webpage}
+            {$userData.webpage
+              ? $userData.webpage
+              : "Edit to fill al library webpage"}
           </a>
           <h3>
-            {$userData.libraryAddress}
+            {$userData.libraryAddress
+              ? $userData.libraryAddress
+              : "Edit to fill al library address"}
           </h3>
-          {$userData.description}
+          {$userData.description
+            ? $userData.description
+            : "edit to fill library description"}
         </Col>
 
         <Col width={80} />
@@ -81,6 +88,12 @@
         </Col>
       </Row>
     {:else}
+      <Button
+        iconF7="xmark"
+        on:click={() => {
+          generalEdit = false;
+        }}
+      />
       <LibraryGeneral bind:generalEdit />
     {/if}
   </Block>

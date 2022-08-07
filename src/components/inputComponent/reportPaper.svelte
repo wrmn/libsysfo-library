@@ -79,21 +79,18 @@
           radio
           radioIcon="start"
           title="All"
-          value="All"
           name="categories-radio"
-          bind:checked={all}
           on:change={() => {
-            all = !all;
+            all = true;
           }}
         />
         <ListItem
           radio
           radioIcon="start"
           title="Specific"
-          value="Specific"
           name="categories-radio"
           on:change={() => {
-            all = !all;
+            all = false;
           }}
         />
         <ListItem

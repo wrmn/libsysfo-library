@@ -79,6 +79,10 @@ export const permissionResult = writable([]);
 
 export const dashboardDataset = writable({});
 
+export const notification = writable({});
+
+export const notificationCount = writable(0);
+
 export const lineDataTemplate = {
   label: "My First dataset",
   fill: true,

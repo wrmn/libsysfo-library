@@ -1,5 +1,7 @@
 const serverUrl = import.meta.env.VITE_SERVER_ADDRESS;
 import { f7 } from "framework7-svelte";
+import { get } from "svelte/store";
+import { notification, notificationCount } from "./store";
 
 export const whenUnsuccess = (desc) => (desc ? desc : "server timeout");
 
@@ -73,12 +75,36 @@ export const getReport = async (path) => {
     const response = await fetch(request).catch(handleError);
     if (response.status != 200) {
       const js = await response.json();
-      f7.dialog.alert(whenUnsuccess(js.description), "");
+      f7.dialog.alert(whenUnsuccess(resp.description), "");
       return;
     }
     const blob = await response.blob();
     let file = window.URL.createObjectURL(blob);
     window.location.assign(file);
+  }
+};
+
+export const getNotification = async () => {
+  notification.set(await getWithAuth(`/notification`));
+  setTimeout(() => {
+    let res = get(notification);
+    if (res.data && res.data.notification) {
+      let count = 0;
+      res.data.notification.forEach((e) => {
+        if (e.read == false) {
+          count++;
+        }
+      });
+      notificationCount.set(count);
+    }
+  }, 2000);
+};
+
+export const readNotification = async () => {
+  const resp = await postWithAuth(undefined, `/notification`);
+  f7.dialog.alert(resp.description ? resp.description : "server timeout", "");
+  if (resp == 200) {
+    notificationCount.set(0);
   }
 };
 

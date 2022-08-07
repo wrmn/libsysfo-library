@@ -6,7 +6,7 @@
 
 <List>
   <ListInput
-  disabled
+    disabled
     label="E-mail"
     type="email"
     floatingLabel

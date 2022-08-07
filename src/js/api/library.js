@@ -5,10 +5,7 @@ const path = "/admin/library/update";
 export const updateGeneral = async (data) => {
   const response = await postWithAuth(data, `${path}`);
 
-  if (response.status == 200) {
-    return response;
-  }
-  return {};
+  return response ? response : {};
 };
 
 export const updateImage = async (data) =>

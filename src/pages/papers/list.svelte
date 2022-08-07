@@ -5,6 +5,7 @@
     NavTitle,
     Badge,
     Link,
+    Button,
     List,
     ListItem,
     NavRight,
@@ -59,6 +60,18 @@
       <List class="searchbar-not-found">
         <ListItem title="Nothing found" />
       </List>
+      {#if $papersList.length < 1}
+        <h1>Add Paper</h1>
+
+        <Button
+          fill
+          iconIos="f7:plus"
+          iconAurora="f7:plus"
+          iconMd="material:add"
+          tooltip="New Paper"
+          href="/paper/add/"
+        />
+      {/if}
       <List class="search-list searchbar-found" mediaList>
         {#each $papersList as paper}
           <ListItem

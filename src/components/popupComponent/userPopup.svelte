@@ -1,7 +1,7 @@
 <script>
-  import { dataset } from "dom7";
   import {
     Popup,
+    Button,
     Page,
     Navbar,
     NavRight,
@@ -85,6 +85,25 @@
         </Row>
       {/if}
     </Card>
+    {#if $userDetail.profile && $userDetail.profile.phoneCode && $userDetail.profile.phoneNo}
+      <a
+        class="button button-fill external color-theme-green"
+        href={`https://wa.me/${`${$userDetail.profile.phoneCode}`.replace(
+          "+",
+          ""
+        )}${$userDetail.profile.phoneNo}`}
+      >
+        Contact via whatsapp
+      </a>
+    {/if}
+    {#if $userDetail.profile && $userDetail.profile.email}
+      <a
+        class="button button-fill external"
+        href={`mailto:${$userDetail.profile.email}`}
+      >
+        Contact via email
+      </a>
+    {/if}
   </Page>
 </Popup>
 
